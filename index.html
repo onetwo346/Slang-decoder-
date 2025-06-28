@@ -6,6 +6,7 @@
   <title>Slanguage Translator Pro</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/framer-motion/10.12.16/motion.min.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -47,102 +48,6 @@
     @keyframes pulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.5; }
-    }
-    .loading::after {
-      content: ' ⏳';
-    }
-  </style>
-</head>
-<body class="bg-gradient min-h-screen flex flex-col items-center p-6 text-white transition-colors duration-500">
-  <h1 class="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent mb-6">
-    🌀 Slanguage Translator Pro
-  </h1>
-  <div class="translator-box max-w-3xl w-full p-6">
-    <textarea
-      id="inputText"
-      rows="4"
-      class="w-full p-4 text-lg rounded-lg bg-gray-200 text-gray-800 mb-4 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-      placeholder="Type or speak your message here..."
-    ></textarea>
-    <button
-      id="voiceBtn"
-      class="p-2 mb-4 rounded-lg bg-purple-500 hover:bg-purple-600 text-white transition"
-    >
-      🎤 Speak
-    </button>
- uncertain
-System: I'm sorry, it looks like your message was cut off. You mentioned that tapping the "Translate It" button does nothing, and I provided a debugged version of the HTML code to address potential issues. Since you haven't confirmed if the new code worked or provided additional details, I'll assume you're still facing issues with the button and want to ensure the single HTML file works perfectly.
-
-The code I provided earlier should work, but to address any lingering issues (e.g., mobile tap problems, JavaScript errors, or browser compatibility), I'll refine it further. Below is an updated, robust version of the **Slanguage Translator Pro** HTML file. This version:
-- Ensures the `translate()` function is properly bound and works on both click and touch events.
-- Adds detailed console logging for debugging.
-- Includes a fallback for the Web Speech API to avoid errors in unsupported browsers.
-- Simplifies the translation logic for reliability.
-- Enhances mobile responsiveness with explicit touch event listeners.
-- Retains all pro features (voice input, slang submission, trending slang, dark/light mode).
-
-If you're seeing specific errors in the browser console or have details about your device/browser, please share them, and I can pinpoint the issue further.
-
----
-
-### **Updated and Debugged HTML Code**
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Slanguage Translator Pro</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Orbitron', sans-serif;
-    }
-    .bg-gradient {
-      background: linear-gradient(135deg, #1f0036, #3a0ca3, #7209b7);
-    }
-    .light-mode {
-      background: linear-gradient(135deg, #f3e7e9, #e3eeff, #e3eeff);
-    }
-    .translator-box {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 16px;
-      box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(8px);
-    }
-    .translate-btn {
-      background: linear-gradient(to right, #ff00c8, #00f2ff);
-      box-shadow: 0 0 20px #00f2ff;
-    }
-    .output-box {
-      background: #0f0f0f;
-      border-left: 4px solid #00f2ff;
-    }
-    .light-mode .translator-box {
-      background: rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(0, 0, 0, 0.2);
-    }
-    .light-mode .output-box {
-      background: #f3f3f3;
-      border-left: 4px solid #ff00c8;
-      color: #333;
-    }
-    .animate-pulse {
-      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-    .loading::after {
-      content: ' ⏳';
-    }
-    button {
-      touch-action: manipulation;
     }
   </style>
 </head>
@@ -161,7 +66,6 @@ If you're seeing specific errors in the browser console or have details about yo
       id="voiceBtn"
       class="p-2 mb-4 rounded-lg bg-purple-500 hover:bg-purple-600 text-white transition"
       onclick="startVoiceInput()"
-      ontouchstart="startVoiceInput()"
     >
       🎤 Speak
     </button>
@@ -180,10 +84,8 @@ If you're seeing specific errors in the browser console or have details about yo
       </button>
     </div>
     <button
-      id="translateBtn"
       class="translate-btn w-full p-3 text-lg rounded-lg text-white hover:scale-105 transition"
       onclick="translate()"
-      ontouchstart="translate()"
     >
       ⚡ Translate It
     </button>
@@ -211,7 +113,6 @@ If you're seeing specific errors in the browser console or have details about yo
       <button
         class="w-full p-2 mt-2 rounded-lg bg-cyan-500 hover:bg-pink-600 text-white transition"
         onclick="submitSlang()"
-        ontouchstart="submitSlang()"
       >
         Submit Slang
       </button>
@@ -225,7 +126,6 @@ If you're seeing specific errors in the browser console or have details about yo
     id="themeToggle"
     class="mt-4 p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white transition"
     onclick="toggleTheme()"
-    ontouchstart="toggleTheme()"
   >
     ☀️ Light Mode
   </button>
@@ -248,34 +148,20 @@ If you're seeing specific errors in the browser console or have details about yo
 
     // Initialize style buttons
     document.querySelectorAll('.style-btn').forEach(btn => {
-      btn.addEventListener('click', () => setStyle(btn.dataset.style));
-      btn.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Prevent double-triggering on mobile
-        setStyle(btn.dataset.style);
+      btn.addEventListener('click', () => {
+        currentStyle = btn.dataset.style;
+        document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('bg-pink-500', 'text-white'));
+        btn.classList.add('bg-pink-500', 'text-white');
       });
     });
 
-    function setStyle(style) {
-      console.log('Setting style:', style);
-      currentStyle = style;
-      document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('bg-pink-500', 'text-white'));
-      document.querySelector(`.style-btn[data-style="${style}"]`).classList.add('bg-pink-500', 'text-white');
-    }
-
     // Voice input
     function startVoiceInput() {
-      console.log('Starting voice input');
-      if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
-        document.getElementById('outputText').textContent = 'Voice input not supported in this browser.';
-        return;
-      }
       const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
       recognition.onresult = (event) => {
-        console.log('Voice input received:', event.results[0][0].transcript);
         document.getElementById('inputText').value = event.results[0][0].transcript;
       };
-      recognition.onerror = (error) => {
-        console.error('Voice input error:', error);
+      recognition.onerror = () => {
         document.getElementById('outputText').textContent = 'Voice input failed. Try again.';
       };
       recognition.start();
@@ -283,16 +169,16 @@ If you're seeing specific errors in the browser console or have details about yo
 
     // Theme toggle
     function toggleTheme() {
-      console.log('Toggling theme');
       darkMode = !darkMode;
       document.body.classList.toggle('light-mode', !darkMode);
       document.getElementById('themeToggle').textContent = darkMode ? '☀️ Light Mode' : '🌙 Dark Mode';
     }
 
-    // Mock slang fetching
+    // Mock slang fetching (simulating web/X API)
     function fetchSlang() {
-      console.log('Fetching slang');
+      // Simulate async fetch
       setTimeout(() => {
+        // Add a new slang term (mocking web scraping)
         slangDatabase.push({
           term: 'vibe',
           meaning: 'mood',
@@ -305,7 +191,6 @@ If you're seeing specific errors in the browser console or have details about yo
 
     // Update trending slang list
     function updateSlangList() {
-      console.log('Updating slang list');
       const slangList = document.getElementById('slangList');
       slangList.innerHTML = '';
       slangDatabase
@@ -315,18 +200,13 @@ If you're seeing specific errors in the browser console or have details about yo
           const li = document.createElement('li');
           li.textContent = `${slang.term}: ${slang.meaning} (${slang.style})`;
           li.className = 'cursor-pointer hover:text-cyan-300';
-          li.addEventListener('click', () => voteSlang(slang.term));
-          li.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            voteSlang(slang.term);
-          });
+          li.onclick = () => voteSlang(slang.term);
           slangList.appendChild(li);
         });
     }
 
     // Vote for slang
     function voteSlang(term) {
-      console.log('Voting for slang:', term);
       const slang = slangDatabase.find(s => s.term === term);
       if (slang) slang.votes += 1;
       updateSlangList();
@@ -334,7 +214,6 @@ If you're seeing specific errors in the browser console or have details about yo
 
     // Submit new slang
     function submitSlang() {
-      console.log('Submitting slang');
       const term = document.getElementById('slangTerm').value.trim();
       const meaning = document.getElementById('slangMeaning').value.trim();
       const style = document.getElementById('slangStyle').value;
@@ -349,57 +228,47 @@ If you're seeing specific errors in the browser console or have details about yo
       }
     }
 
-    // Translate function
+    // AI-powered translation (simulated)
     function translate() {
-      console.log('Translating with style:', currentStyle);
-      const translateBtn = document.getElementById('translateBtn');
-      const output = document.getElementById('outputText');
       const input = document.getElementById('inputText').value.trim();
-
+      const output = document.getElementById('outputText');
       if (!input) {
         output.textContent = 'Please type or speak something to translate.';
         return;
       }
 
-      translateBtn.classList.add('loading');
-      setTimeout(() => {
-        let result = input;
-        const slangForStyle = slangDatabase.filter(s => s.style === currentStyle);
+      let result = input;
+      const slangForStyle = slangDatabase.filter(s => s.style === currentStyle);
+      
+      // Contextual translation rules (simulating AI)
+      slangForStyle.forEach(({ term, meaning }) => {
+        result = result.replace(new RegExp(`\\b${term}\\b`, 'gi'), meaning);
+      });
 
-        // Apply slang replacements
-        slangForStyle.forEach(({ term, meaning }) => {
-          result = result.replace(new RegExp(`\\b${term}\\b`, 'gi'), meaning);
-        });
+      // Additional contextual transformations
+      if (currentStyle === 'genz') {
+        result = result.replace(/going to/gi, 'finna').replace(/yes/gi, 'fr').replace(/no/gi, 'nah fam');
+        result = `💬 ${result} ${Math.random() > 0.5 ? 'vibes' : 'slaps'}`;
+      } else if (currentStyle === '90s') {
+        result = result.replace(/okay/gi, 'aight').replace(/great/gi, 'da bomb');
+        result = `🎤 ${result} ${Math.random() > 0.5 ? 'word!' : 'peace!'}`;
+      } else if (currentStyle === 'shakespeare') {
+        result = result.replace(/is/gi, 'be').replace(/do/gi, 'doth');
+        result = `🎭 ${result}, forsooth!`;
+      } else if (currentStyle === 'proverb') {
+        result = result.replace(/time/gi, 'the river of existence');
+        result = `📜 "${result}, as the ancients decree."`;
+      }
 
-        // Contextual transformations
-        if (currentStyle === 'genz') {
-          result = result.replace(/going to/gi, 'finna').replace(/yes/gi, 'fr').replace(/no/gi, 'nah fam');
-          result = `💬 ${result} ${Math.random() > 0.5 ? 'vibes' : 'slaps'}`;
-        } else if (currentStyle === '90s') {
-          result = result.replace(/okay/gi, 'aight').replace(/great/gi, 'da bomb');
-          result = `🎤 ${result} ${Math.random() > 0.5 ? 'word!' : 'peace!'}`;
-        } else if (currentStyle === 'shakespeare') {
-          result = result.replace(/is/gi, 'be').replace(/do/gi, 'doth');
-          result = `🎭 ${result}, forsooth!`;
-        } else if (currentStyle === 'proverb') {
-          result = result.replace(/time/gi, 'the river of existence');
-          result = `📜 "${result}, as the ancients decree."`;
-        }
+      output.textContent = result;
+      output.classList.add('animate-pulse');
+      setTimeout(() => output.classList.remove('animate-pulse'), 2000);
 
-        output.textContent = result;
-        output.classList.add('animate-pulse');
-        setTimeout(() => {
-          output.classList.remove('animate-pulse');
-          translateBtn.classList.remove('loading');
-        }, 1000);
-
-        // Simulate fetching new slang
-        fetchSlang();
-      }, 500); // Simulate processing delay
+      // Simulate fetching new slang
+      fetchSlang();
     }
 
     // Initialize
-    console.log('Initializing app');
     updateSlangList();
     document.querySelector('.style-btn[data-style="genz"]').classList.add('bg-pink-500', 'text-white');
   </script>
