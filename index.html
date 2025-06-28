@@ -2,170 +2,275 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Slanguage Translator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slanguage Translator Pro</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/framer-motion/10.12.16/motion.min.js"></script>
   <style>
     * {
       box-sizing: border-box;
       font-family: 'Orbitron', sans-serif;
     }
-    body {
-      margin: 0;
+    .bg-gradient {
       background: linear-gradient(135deg, #1f0036, #3a0ca3, #7209b7);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 3rem 1rem;
     }
-
-    h1 {
-      font-size: 2.8rem;
-      margin-bottom: 1rem;
-      text-align: center;
-      background: linear-gradient(to right, #ff6ec4, #7873f5);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .light-mode {
+      background: linear-gradient(135deg, #f3e7e9, #e3eeff, #e3eeff);
     }
-
     .translator-box {
-      max-width: 700px;
-      width: 100%;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 16px;
-      padding: 2rem;
       box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(8px);
     }
-
-    textarea {
-      width: 100%;
-      padding: 1rem;
-      font-size: 1.1rem;
-      border: none;
-      border-radius: 12px;
-      resize: vertical;
-      background: #f3f3f3;
-      color: #333;
-      margin-bottom: 1rem;
-    }
-
-    .options {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .options button {
-      flex: 1 1 45%;
-      background: #00f2ff;
-      color: #000;
-      font-weight: bold;
-      border: none;
-      padding: 0.7rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .options button:hover {
-      background: #ff00c8;
-      color: white;
-    }
-
     .translate-btn {
-      width: 100%;
       background: linear-gradient(to right, #ff00c8, #00f2ff);
-      border: none;
-      color: white;
-      font-size: 1.2rem;
-      padding: 1rem;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-bottom: 1.5rem;
       box-shadow: 0 0 20px #00f2ff;
-      transition: transform 0.2s ease;
     }
-
-    .translate-btn:hover {
-      transform: scale(1.03);
-    }
-
     .output-box {
       background: #0f0f0f;
       border-left: 4px solid #00f2ff;
-      padding: 1rem;
-      border-radius: 10px;
-      white-space: pre-wrap;
-      min-height: 80px;
     }
-
-    @media (max-width: 500px) {
-      .options button {
-        flex: 1 1 100%;
-      }
+    .light-mode .translator-box {
+      background: rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.2);
+    }
+    .light-mode .output-box {
+      background: #f3f3f3;
+      border-left: 4px solid #ff00c8;
+      color: #333;
+    }
+    .animate-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
   </style>
 </head>
-<body>
-
-  <h1>🌀 Slanguage Translator</h1>
-  <div class="translator-box">
-    <textarea id="inputText" rows="4" placeholder="Type your message here..."></textarea>
-
-    <div class="options">
-      <button onclick="setStyle('genz')">Gen Z 🧃</button>
-      <button onclick="setStyle('90s')">90s Slang 🎧</button>
-      <button onclick="setStyle('shakespeare')">Shakespeare 🏰</button>
-      <button onclick="setStyle('proverb')">Ancient Proverb 📜</button>
+<body class="bg-gradient min-h-screen flex flex-col items-center p-6 text-white transition-colors duration-500">
+  <h1 class="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent mb-6">
+    🌀 Slanguage Translator Pro
+  </h1>
+  <div class="translator-box max-w-3xl w-full p-6">
+    <textarea
+      id="inputText"
+      rows="4"
+      class="w-full p-4 text-lg rounded-lg bg-gray-200 text-gray-800 mb-4 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+      placeholder="Type or speak your message here..."
+    ></textarea>
+    <button
+      id="voiceBtn"
+      class="p-2 mb-4 rounded-lg bg-purple-500 hover:bg-purple-600 text-white transition"
+      onclick="startVoiceInput()"
+    >
+      🎤 Speak
+    </button>
+    <div class="flex flex-wrap gap-2 mb-4">
+      <button class="style-btn flex-1 p-2 rounded-lg bg-cyan-500 text-black hover:bg-pink-600 hover:text-white transition" data-style="genz">
+        Gen Z 🧃
+      </button>
+      <button class="style-btn flex-1 p-2 rounded-lg bg-cyan-500 text-black hover:bg-pink-600 hover:text-white transition" data-style="90s">
+        90s 🎧
+      </button>
+      <button class="style-btn flex-1 p-2 rounded-lg bg-cyan-500 text-black hover:bg-pink-600 hover:text-white transition" data-style="shakespeare">
+        Shakespeare 🏰
+      </button>
+      <button class="style-btn flex-1 p-2 rounded-lg bg-cyan-500 text-black hover:bg-pink-600 hover:text-white transition" data-style="proverb">
+        Ancient Proverb 📜
+      </button>
     </div>
-
-    <button class="translate-btn" onclick="translate()">⚡ Translate It</button>
-
-    <div class="output-box" id="outputText">Your translation will appear here...</div>
+    <button
+      class="translate-btn w-full p-3 text-lg rounded-lg text-white hover:scale-105 transition"
+      onclick="translate()"
+    >
+      ⚡ Translate It
+    </button>
+    <div id="outputText" class="output-box mt-4 p-4 rounded-lg min-h-[80px] text-lg">
+      Your translation will appear here...
+    </div>
+    <div class="mt-4">
+      <h2 class="text-lg font-bold">Submit New Slang</h2>
+      <input
+        id="slangTerm"
+        class="w-full p-2 mt-2 rounded-lg bg-gray-200 text-gray-800"
+        placeholder="Slang term"
+      />
+      <input
+        id="slangMeaning"
+        class="w-full p-2 mt-2 rounded-lg bg-gray-200 text-gray-800"
+        placeholder="Meaning"
+      />
+      <select id="slangStyle" class="w-full p-2 mt-2 rounded-lg bg-gray-200 text-gray-800">
+        <option value="genz">Gen Z</option>
+        <option value="90s">90s</option>
+        <option value="shakespeare">Shakespeare</option>
+        <option value="proverb">Ancient Proverb</option>
+      </select>
+      <button
+        class="w-full p-2 mt-2 rounded-lg bg-cyan-500 hover:bg-pink-600 text-white transition"
+        onclick="submitSlang()"
+      >
+        Submit Slang
+      </button>
+    </div>
+    <div class="mt-4">
+      <h2 class="text-lg font-bold">Trending Slang</h2>
+      <ul id="slangList" class="list-disc pl-5 text-sm"></ul>
+    </div>
   </div>
+  <button
+    id="themeToggle"
+    class="mt-4 p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white transition"
+    onclick="toggleTheme()"
+  >
+    ☀️ Light Mode
+  </button>
 
   <script>
     let currentStyle = 'genz';
+    let darkMode = true;
 
-    function setStyle(style) {
-      currentStyle = style;
+    // Mock slang database (simulating web/X scraping)
+    let slangDatabase = [
+      { term: 'yeet', meaning: 'to throw', style: 'genz', votes: 10 },
+      { term: 'lit', meaning: 'awesome', style: 'genz', votes: 8 },
+      { term: 'fly', meaning: 'cool', style: '90s', votes: 7 },
+      { term: 'homie', meaning: 'friend', style: '90s', votes: 6 },
+      { term: 'thou', meaning: 'you', style: 'shakespeare', votes: 5 },
+      { term: 'art', meaning: 'are', style: 'shakespeare', votes: 4 },
+      { term: 'wealth', meaning: 'money', style: 'proverb', votes: 3 },
+      { term: 'companion', meaning: 'friend', style: 'proverb', votes: 2 }
+    ];
+
+    // Initialize style buttons
+    document.querySelectorAll('.style-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentStyle = btn.dataset.style;
+        document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('bg-pink-500', 'text-white'));
+        btn.classList.add('bg-pink-500', 'text-white');
+      });
+    });
+
+    // Voice input
+    function startVoiceInput() {
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.onresult = (event) => {
+        document.getElementById('inputText').value = event.results[0][0].transcript;
+      };
+      recognition.onerror = () => {
+        document.getElementById('outputText').textContent = 'Voice input failed. Try again.';
+      };
+      recognition.start();
     }
 
+    // Theme toggle
+    function toggleTheme() {
+      darkMode = !darkMode;
+      document.body.classList.toggle('light-mode', !darkMode);
+      document.getElementById('themeToggle').textContent = darkMode ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+
+    // Mock slang fetching (simulating web/X API)
+    function fetchSlang() {
+      // Simulate async fetch
+      setTimeout(() => {
+        // Add a new slang term (mocking web scraping)
+        slangDatabase.push({
+          term: 'vibe',
+          meaning: 'mood',
+          style: 'genz',
+          votes: Math.floor(Math.random() * 10)
+        });
+        updateSlangList();
+      }, 1000);
+    }
+
+    // Update trending slang list
+    function updateSlangList() {
+      const slangList = document.getElementById('slangList');
+      slangList.innerHTML = '';
+      slangDatabase
+        .sort((a, b) => b.votes - a.votes)
+        .slice(0, 5)
+        .forEach(slang => {
+          const li = document.createElement('li');
+          li.textContent = `${slang.term}: ${slang.meaning} (${slang.style})`;
+          li.className = 'cursor-pointer hover:text-cyan-300';
+          li.onclick = () => voteSlang(slang.term);
+          slangList.appendChild(li);
+        });
+    }
+
+    // Vote for slang
+    function voteSlang(term) {
+      const slang = slangDatabase.find(s => s.term === term);
+      if (slang) slang.votes += 1;
+      updateSlangList();
+    }
+
+    // Submit new slang
+    function submitSlang() {
+      const term = document.getElementById('slangTerm').value.trim();
+      const meaning = document.getElementById('slangMeaning').value.trim();
+      const style = document.getElementById('slangStyle').value;
+      if (term && meaning) {
+        slangDatabase.push({ term, meaning, style, votes: 0 });
+        updateSlangList();
+        document.getElementById('slangTerm').value = '';
+        document.getElementById('slangMeaning').value = '';
+        document.getElementById('outputText').textContent = 'Slang submitted! It’s now in the database.';
+      } else {
+        document.getElementById('outputText').textContent = 'Please enter a term and meaning.';
+      }
+    }
+
+    // AI-powered translation (simulated)
     function translate() {
       const input = document.getElementById('inputText').value.trim();
       const output = document.getElementById('outputText');
-
       if (!input) {
-        output.textContent = "Please type something to translate.";
+        output.textContent = 'Please type or speak something to translate.';
         return;
       }
 
-      let result;
-      switch (currentStyle) {
-        case 'genz':
-          result = `💬 ${input.replace(/hello/gi, "yo").replace(/yes/gi, "fr").replace(/no/gi, "nah fam").replace(/going to/gi, "finna")}`;
-          break;
-        case '90s':
-          result = `🎤 ${input.replace(/cool/gi, "fly").replace(/friend/gi, "homie").replace(/great/gi, "da bomb").replace(/okay/gi, "aight")}`;
-          break;
-        case 'shakespeare':
-          result = `🎭 ${input.replace(/you/gi, "thou").replace(/are/gi, "art").replace(/do/gi, "doth").replace(/is/gi, "be")}`;
-          break;
-        case 'proverb':
-          result = `📜 "${input.replace(/money/gi, "wealth").replace(/time/gi, "the river of existence").replace(/friend/gi, "a companion in life's storm")}"`;
-          break;
-        default:
-          result = input;
+      let result = input;
+      const slangForStyle = slangDatabase.filter(s => s.style === currentStyle);
+      
+      // Contextual translation rules (simulating AI)
+      slangForStyle.forEach(({ term, meaning }) => {
+        result = result.replace(new RegExp(`\\b${term}\\b`, 'gi'), meaning);
+      });
+
+      // Additional contextual transformations
+      if (currentStyle === 'genz') {
+        result = result.replace(/going to/gi, 'finna').replace(/yes/gi, 'fr').replace(/no/gi, 'nah fam');
+        result = `💬 ${result} ${Math.random() > 0.5 ? 'vibes' : 'slaps'}`;
+      } else if (currentStyle === '90s') {
+        result = result.replace(/okay/gi, 'aight').replace(/great/gi, 'da bomb');
+        result = `🎤 ${result} ${Math.random() > 0.5 ? 'word!' : 'peace!'}`;
+      } else if (currentStyle === 'shakespeare') {
+        result = result.replace(/is/gi, 'be').replace(/do/gi, 'doth');
+        result = `🎭 ${result}, forsooth!`;
+      } else if (currentStyle === 'proverb') {
+        result = result.replace(/time/gi, 'the river of existence');
+        result = `📜 "${result}, as the ancients decree."`;
       }
 
       output.textContent = result;
-    }
-  </script>
+      output.classList.add('animate-pulse');
+      setTimeout(() => output.classList.remove('animate-pulse'), 2000);
 
+      // Simulate fetching new slang
+      fetchSlang();
+    }
+
+    // Initialize
+    updateSlangList();
+    document.querySelector('.style-btn[data-style="genz"]').classList.add('bg-pink-500', 'text-white');
+  </script>
 </body>
 </html>
