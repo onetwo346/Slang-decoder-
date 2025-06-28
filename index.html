@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Slanguage Translator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Orbitron', sans-serif;
+    }
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #1f0036, #3a0ca3, #7209b7);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1rem;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      background: linear-gradient(to right, #ff6ec4, #7873f5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .translator-box {
+      max-width: 700px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+    }
+
+    textarea {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 12px;
+      resize: vertical;
+      background: #f3f3f3;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .options button {
+      flex: 1 1 45%;
+      background: #00f2ff;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .options button:hover {
+      background: #ff00c8;
+      color: white;
+    }
+
+    .translate-btn {
+      width: 100%;
+      background: linear-gradient(to right, #ff00c8, #00f2ff);
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      padding: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 20px #00f2ff;
+      transition: transform 0.2s ease;
+    }
+
+    .translate-btn:hover {
+      transform: scale(1.03);
+    }
+
+    .output-box {
+      background: #0f0f0f;
+      border-left: 4px solid #00f2ff;
+      padding: 1rem;
+      border-radius: 10px;
+      white-space: pre-wrap;
+      min-height: 80px;
+    }
+
+    @media (max-width: 500px) {
+      .options button {
+        flex: 1 1 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌀 Slanguage Translator</h1>
+  <div class="translator-box">
+    <textarea id="inputText" rows="4" placeholder="Type your message here..."></textarea>
+
+    <div class="options">
+      <button onclick="setStyle('genz')">Gen Z 🧃</button>
+      <button onclick="setStyle('90s')">90s Slang 🎧</button>
+      <button onclick="setStyle('shakespeare')">Shakespeare 🏰</button>
+      <button onclick="setStyle('proverb')">Ancient Proverb 📜</button>
+    </div>
+
+    <button class="translate-btn" onclick="translate()">⚡ Translate It</button>
+
+    <div class="output-box" id="outputText">Your translation will appear here...</div>
+  </div>
+
+  <script>
+    let currentStyle = 'genz';
+
+    function setStyle(style) {
+      currentStyle = style;
+    }
+
+    function translate() {
+      const input = document.getElementById('inputText').value.trim();
+      const output = document.getElementById('outputText');
+
+      if (!input) {
+        output.textContent = "Please type something to translate.";
+        return;
+      }
+
+      let result;
+      switch (currentStyle) {
+        case 'genz':
+          result = `💬 ${input.replace(/hello/gi, "yo").replace(/yes/gi, "fr").replace(/no/gi, "nah fam").replace(/going to/gi, "finna")}`;
+          break;
+        case '90s':
+          result = `🎤 ${input.replace(/cool/gi, "fly").replace(/friend/gi, "homie").replace(/great/gi, "da bomb").replace(/okay/gi, "aight")}`;
+          break;
+        case 'shakespeare':
+          result = `🎭 ${input.replace(/you/gi, "thou").replace(/are/gi, "art").replace(/do/gi, "doth").replace(/is/gi, "be")}`;
+          break;
+        case 'proverb':
+          result = `📜 "${input.replace(/money/gi, "wealth").replace(/time/gi, "the river of existence").replace(/friend/gi, "a companion in life's storm")}"`;
+          break;
+        default:
+          result = input;
+      }
+
+      output.textContent = result;
+    }
+  </script>
+
+</body>
+</html>
