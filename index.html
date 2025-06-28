@@ -4,43 +4,204 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Slanguage Translator Pro</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/framer-motion/10.12.16/motion.min.js"></script>
   <style>
     * {
       box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    h1, .orbitron {
       font-family: 'Orbitron', sans-serif;
     }
     .bg-gradient {
       background: linear-gradient(135deg, #1f0036, #3a0ca3, #7209b7);
     }
-    .light-mode {
-      background: linear-gradient(135deg, #f3e7e9, #e3eeff, #e3eeff);
-    }
     .translator-box {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 16px;
-      box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(8px);
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 18px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+      backdrop-filter: blur(10px);
+      padding: 2rem 1.5rem;
+    }
+    textarea, input, select {
+      background: #f7f8fa;
+      color: #222;
+      border-radius: 10px;
+      border: none;
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+      padding: 0.85rem 1rem;
+      transition: box-shadow 0.2s, border 0.2s;
+      box-shadow: 0 1px 4px rgba(60,60,100,0.06);
+    }
+    textarea:focus, input:focus, select:focus {
+      outline: none;
+      border: 2px solid #7c3aed;
+      box-shadow: 0 0 0 2px #a78bfa;
+    }
+    .translate-btn, .style-btn, .example-btn, #themeToggle {
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      border-radius: 10px;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
     }
     .translate-btn {
-      background: linear-gradient(to right, #ff00c8, #00f2ff);
-      box-shadow: 0 0 20px #00f2ff;
+      background: linear-gradient(90deg, #7c3aed, #00f2ff);
+      color: #fff;
+      box-shadow: 0 2px 12px #00f2ff44;
+    }
+    .translate-btn:hover {
+      background: linear-gradient(90deg, #00f2ff, #7c3aed);
+      transform: scale(1.03);
+    }
+    .style-btn {
+      background: #e0e7ff;
+      color: #3a0ca3;
+    }
+    .style-btn:hover {
+      background: #7c3aed;
+      color: #fff;
+    }
+    .example-btn {
+      background: #4f46e5;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: background 0.18s, color 0.18s, transform 0.15s;
+      box-shadow: 0 1px 4px #312e8166;
+    }
+    .example-btn:hover, .example-btn:focus {
+      background: #a78bfa;
+      color: #222;
+      transform: scale(1.07);
+    }
+    .light-mode .example-btn {
+      background: #e0e7ff;
+      color: #312e81;
+      box-shadow: 0 1px 4px #a78bfa44;
+    }
+    .light-mode .example-btn:hover, .light-mode .example-btn:focus {
+      background: #7c3aed;
+      color: #fff;
+    }
+    #themeToggle {
+      background: #3a0ca3;
+      color: #fff;
+      margin-top: 1.5rem;
+    }
+    #themeToggle:hover {
+      background: #00f2ff;
+      color: #3a0ca3;
     }
     .output-box {
-      background: #0f0f0f;
+      background: #fff;
+      color: #222;
       border-left: 4px solid #00f2ff;
+      border-radius: 10px;
+      margin-top: 1.5rem;
+      min-height: 80px;
+      box-shadow: 0 1px 8px #3a0ca322;
+    }
+    .streak-counter {
+      background: linear-gradient(45deg, #ff6b6b, #ffa500);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: #fff;
+      box-shadow: 0 2px 8px #ff6b6b44;
+    }
+    .history-item {
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      border-radius: 8px;
+    }
+    .history-item:hover {
+      background: #ede9fe;
+      color: #3a0ca3;
+      transform: translateX(6px);
+    }
+    .light-mode {
+      background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 40%, #bae6fd 100%);
+      position: relative;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .light-mode::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: url('https://www.transparenttextures.com/patterns/stardust.png'), radial-gradient(ellipse at 60% 20%, #c7d2fe88 0%, #f3e8ff00 70%), radial-gradient(ellipse at 80% 80%, #f0abfc55 0%, #bae6fd00 80%);
+      opacity: 0.7;
+      mix-blend-mode: lighten;
     }
     .light-mode .translator-box {
-      background: rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(0, 0, 0, 0.2);
+      background: rgba(255,255,255,0.65);
+      border: 1.5px solid #a78bfa;
+      box-shadow: 0 8px 32px #a78bfa33, 0 1.5px 12px #bae6fd33;
+      backdrop-filter: blur(14px) saturate(1.2);
     }
     .light-mode .output-box {
-      background: #f3f3f3;
-      border-left: 4px solid #ff00c8;
-      color: #333;
+      background: rgba(255,255,255,0.85);
+      color: #2d225a;
+      border-left: 4px solid #7c3aed;
+      box-shadow: 0 2px 12px #a78bfa33;
+    }
+    .light-mode .translate-btn {
+      background: linear-gradient(90deg, #a78bfa, #38bdf8);
+      color: #2d225a;
+      box-shadow: 0 2px 12px #a78bfa44;
+    }
+    .light-mode .translate-btn:hover {
+      background: linear-gradient(90deg, #38bdf8, #a78bfa);
+      color: #fff;
+    }
+    .light-mode .style-btn {
+      background: #f0abfc;
+      color: #2d225a;
+    }
+    .light-mode .style-btn:hover {
+      background: #7c3aed;
+      color: #fff;
+    }
+    .light-mode .section-header {
+      background: linear-gradient(90deg, #a78bfa 60%, #38bdf8 100%);
+      color: #fff;
+      box-shadow: 0 1px 8px #a78bfa33;
+      position: relative;
+      padding-left: 2.2em;
+    }
+    .light-mode .section-header::before {
+      content: '✦';
+      position: absolute;
+      left: 0.8em;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1em;
+      color: #f0abfc;
+      text-shadow: 0 0 6px #a78bfa88;
+    }
+    .light-mode .example-btn {
+      background: #e0e7ff;
+      color: #312e81;
+      box-shadow: 0 1px 4px #a78bfa44;
+    }
+    .light-mode .example-btn:hover, .light-mode .example-btn:focus {
+      background: #7c3aed;
+      color: #fff;
+    }
+    .light-mode .streak-counter {
+      background: linear-gradient(45deg, #a78bfa, #38bdf8);
+      color: #fff;
+      box-shadow: 0 2px 8px #a78bfa44;
     }
     .animate-pulse {
       animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -49,79 +210,271 @@
       0%, 100% { opacity: 1; }
       50% { opacity: 0.5; }
     }
+    .style-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px;
+    }
+    .achievement {
+      animation: achievementPop 0.6s ease-out;
+    }
+    @keyframes achievementPop {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .section-header {
+      font-size: 1.1rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #7c3aed 60%, #00f2ff 100%);
+      color: #fff;
+      padding: 0.4em 1em;
+      border-radius: 8px;
+      margin-bottom: 0.7em;
+      display: inline-block;
+      letter-spacing: 0.01em;
+      box-shadow: 0 1px 6px #7c3aed33;
+    }
+    .light-mode .section-header {
+      background: linear-gradient(90deg, #ede9fe 60%, #bae6fd 100%);
+      color: #3a0ca3;
+      box-shadow: 0 1px 6px #a78bfa22;
+    }
+    .light-mode #slangList, .light-mode .trending-slang, .light-mode .trending-slang *, .light-mode .achievements, .light-mode .achievements * {
+      color: #2d225a !important;
+      text-shadow: 0 1px 2px #fff8;
+    }
+    .light-mode .trending-slang .icon, .light-mode .achievements .icon {
+      color: #fbbf24;
+      filter: drop-shadow(0 1px 2px #fff8);
+    }
   </style>
 </head>
 <body class="bg-gradient min-h-screen flex flex-col items-center p-6 text-white transition-colors duration-500">
-  <h1 class="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent mb-6">
+  <!-- Intro Overlay -->
+  <div id="introOverlay" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-purple-900 via-fuchsia-700 to-blue-900 text-white transition-opacity duration-1000" style="opacity:1;">
+    <div class="text-center animate-bounceIn">
+      <h1 class="text-6xl md:text-7xl font-extrabold mb-6 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent drop-shadow-lg">
+        Welcome to <span class="whitespace-nowrap">Slanguage World</span>
+      </h1>
+      <p class="text-2xl md:text-3xl font-semibold mb-8 max-w-2xl mx-auto text-fuchsia-200 drop-shadow">
+        Where words get wild, vibes get viral, and you become the master of modern lingo. Ready to flex your slang game?
+      </p>
+      <button id="enterBtn" class="px-10 py-4 rounded-full text-2xl font-bold bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 shadow-xl hover:scale-105 hover:from-pink-500 hover:to-yellow-400 transition-all duration-300 animate-pulse">
+        🚀 Tap to Enter Slang World
+      </button>
+    </div>
+    <style>
+      @keyframes bounceIn {
+        0% { transform: scale(0.7) translateY(100px); opacity: 0; }
+        60% { transform: scale(1.05) translateY(-20px); opacity: 1; }
+        80% { transform: scale(0.95) translateY(10px); }
+        100% { transform: scale(1) translateY(0); }
+      }
+      .animate-bounceIn { animation: bounceIn 1.2s cubic-bezier(0.68,-0.55,0.27,1.55); }
+    </style>
+  </div>
+  <script>
+    // Hide intro overlay on button click
+    document.addEventListener('DOMContentLoaded', function() {
+      const intro = document.getElementById('introOverlay');
+      const btn = document.getElementById('enterBtn');
+      if (btn) {
+        btn.addEventListener('click', function() {
+          intro.style.opacity = 0;
+          setTimeout(() => { intro.style.display = 'none'; }, 1000);
+        });
+      }
+    });
+  </script>
+  
+  <h1 class="orbitron text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent mb-6">
     🌀 Slanguage Translator Pro
   </h1>
-  <div class="translator-box max-w-3xl w-full p-6">
+  
+  <!-- Stats Bar -->
+  <div class="flex items-center gap-4 mb-4 text-sm">
+    <div class="streak-counter">
+      <span id="streakCount">0</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span>🔥</span>
+      <span id="pointsCount">0</span> pts
+    </div>
+    <div class="flex items-center gap-2">
+      <span>🏆</span>
+      <span id="achievementCount">0</span> badges
+    </div>
+  </div>
+
+  <div class="translator-box max-w-4xl w-full p-6">
     <textarea
       id="inputText"
       rows="4"
       class="w-full p-4 text-lg rounded-lg bg-gray-200 text-gray-800 mb-4 focus:outline-none focus:ring-2 focus:ring-cyan-500"
       placeholder="Type or speak your message here..."
     ></textarea>
-    <button
-      id="voiceBtn"
-      class="p-2 mb-4 rounded-lg bg-purple-500 hover:bg-purple-600 text-white transition"
-      onclick="startVoiceInput()"
-    >
-      🎤 Speak
-    </button>
-    <div class="flex flex-wrap gap-2 mb-4">
-      <button class="style-btn flex-1 p-2 rounded-lg bg-cyan-500 text-black hover:bg-pink-600 hover:text-white transition" data-style="genz">
-        Gen Z 🧃
+    
+    <!-- Voice and Copy Controls -->
+    <div class="flex gap-2 mb-4">
+      <button
+        id="voiceBtn"
+        class="flex-1 p-2 rounded-lg bg-purple-500 hover:bg-purple-600 text-white transition"
+        onclick="startVoiceInput()"
+      >
+        🎤 Speak
       </button>
-      <button class="style-btn flex-1 p-2 rounded-lg bg-cyan-500 text-black hover:bg-pink-600 hover:text-white transition" data-style="90s">
-        90s 🎧
+      <button
+        id="copyBtn"
+        class="flex-1 p-2 rounded-lg bg-green-500 hover:bg-green-600 text-white transition"
+        onclick="copyToClipboard()"
+      >
+        📋 Copy
       </button>
-      <button class="style-btn flex-1 p-2 rounded-lg bg-cyan-500 text-black hover:bg-pink-600 hover:text-white transition" data-style="shakespeare">
-        Shakespeare 🏰
+      <button
+        id="speakBtn"
+        class="flex-1 p-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white transition"
+        onclick="speakOutput()"
+      >
+        🔊 Speak Output
       </button>
-      <button class="style-btn flex-1 p-2 rounded-lg bg-cyan-500 text-black hover:bg-pink-600 hover:text-white transition" data-style="proverb">
-        Ancient Proverb 📜
+      <button
+        id="lookupBtn"
+        class="flex-1 p-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white transition"
+        onclick="lookupSlang()"
+      >
+        🔍 Lookup Slang
       </button>
     </div>
+
+    <!-- Enhanced Style Buttons -->
+    <div class="style-grid mb-4">
+      <button class="style-btn p-2 rounded-lg bg-cyan-500 text-black hover:bg-pink-600 hover:text-white transition" data-style="genz">
+        Gen Z 🧃
+      </button>
+      <button class="style-btn p-2 rounded-lg bg-cyan-500 text-black hover:bg-pink-600 hover:text-white transition" data-style="90s">
+        90s 🎧
+      </button>
+      <button class="style-btn p-2 rounded-lg bg-cyan-500 text-black hover:bg-pink-600 hover:text-white transition" data-style="shakespeare">
+        Shakespeare 🏰
+      </button>
+      <button class="style-btn p-2 rounded-lg bg-cyan-500 text-black hover:bg-pink-600 hover:text-white transition" data-style="proverb">
+        Ancient Proverb 📜
+      </button>
+      <button class="style-btn p-2 rounded-lg bg-cyan-500 text-black hover:bg-pink-600 hover:text-white transition" data-style="pirate">
+        Pirate 🏴‍☠️
+      </button>
+      <button class="style-btn p-2 rounded-lg bg-cyan-500 text-black hover:bg-pink-600 hover:text-white transition" data-style="valley">
+        Valley Girl 💅
+      </button>
+      <button class="style-btn p-2 rounded-lg bg-cyan-500 text-black hover:bg-pink-600 hover:text-white transition" data-style="british">
+        British 🇬🇧
+      </button>
+      <button class="style-btn p-2 rounded-lg bg-cyan-500 text-black hover:bg-pink-600 hover:text-white transition" data-style="southern">
+        Southern 🤠
+      </button>
+      <button class="style-btn p-2 rounded-lg bg-cyan-500 text-black hover:bg-pink-600 hover:text-white transition" data-style="techbro">
+        Tech Bro 💻
+      </button>
+    </div>
+
     <button
       class="translate-btn w-full p-3 text-lg rounded-lg text-white hover:scale-105 transition"
       onclick="translate()"
     >
       ⚡ Translate It
     </button>
+
     <div id="outputText" class="output-box mt-4 p-4 rounded-lg min-h-[80px] text-lg">
       Your translation will appear here...
     </div>
+
+    <!-- Quick Examples -->
     <div class="mt-4">
-      <h2 class="text-lg font-bold">Submit New Slang</h2>
-      <input
-        id="slangTerm"
-        class="w-full p-2 mt-2 rounded-lg bg-gray-200 text-gray-800"
-        placeholder="Slang term"
-      />
-      <input
-        id="slangMeaning"
-        class="w-full p-2 mt-2 rounded-lg bg-gray-200 text-gray-800"
-        placeholder="Meaning"
-      />
-      <select id="slangStyle" class="w-full p-2 mt-2 rounded-lg bg-gray-200 text-gray-800">
-        <option value="genz">Gen Z</option>
-        <option value="90s">90s</option>
-        <option value="shakespeare">Shakespeare</option>
-        <option value="proverb">Ancient Proverb</option>
-      </select>
-      <button
-        class="w-full p-2 mt-2 rounded-lg bg-cyan-500 hover:bg-pink-600 text-white transition"
-        onclick="submitSlang()"
-      >
-        Submit Slang
-      </button>
+      <h3 class="section-header">💡 Try these trending phrases:</h3>
+      <div class="flex flex-wrap gap-2">
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('lol')">
+          lol
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('lmaoo')">
+          lmaoo
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('cap')">
+          cap
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('sus')">
+          sus
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('idk')">
+          idk
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('idc')">
+          idc
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('wtw')">
+          wtw
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('pmo')">
+          pmo
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('wassgood')">
+          wassgood
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('stg')">
+          stg
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('ngl')">
+          ngl
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('deadass')">
+          deadass
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('bestie')">
+          bestie
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('on god')">
+          on god
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('fr fr')">
+          fr fr
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('no cap fr')">
+          no cap fr
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('lol that was sus')">
+          lol that was sus
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('idk idc')">
+          idk idc
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('bestie no cap')">
+          bestie no cap
+        </button>
+        <button class="example-btn text-xs p-2 rounded bg-gray-700 hover:bg-gray-600 transition" onclick="tryExample('deadass fr fr')">
+          deadass fr fr
+        </button>
+      </div>
     </div>
-    <div class="mt-4">
+
+    <!-- Translation History -->
+    <div class="mt-6">
+      <h2 class="section-header mt-6">📚 Translation History</h2>
+      <div id="historyList" class="max-h-40 overflow-y-auto space-y-2"></div>
+    </div>
+
+    <!-- Trending Slang -->
+    <div class="mt-6">
       <h2 class="text-lg font-bold">Trending Slang</h2>
       <ul id="slangList" class="list-disc pl-5 text-sm"></ul>
     </div>
+
+    <!-- Achievements -->
+    <div class="mt-6">
+      <h2 class="text-lg font-bold">🏆 Achievements</h2>
+      <div id="achievementsList" class="flex flex-wrap gap-2 mt-2"></div>
+    </div>
   </div>
+
   <button
     id="themeToggle"
     class="mt-4 p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white transition"
@@ -133,17 +486,562 @@
   <script>
     let currentStyle = 'genz';
     let darkMode = true;
+    let translationHistory = [];
+    let points = 0;
+    let streak = 0;
+    let achievements = [];
+    let lastTranslationDate = null;
 
-    // Mock slang database (simulating web/X scraping)
+    // Enhanced slang database with new styles
     let slangDatabase = [
+      // Gen Z Slang (Current Trending)
       { term: 'yeet', meaning: 'to throw', style: 'genz', votes: 10 },
       { term: 'lit', meaning: 'awesome', style: 'genz', votes: 8 },
+      { term: 'vibe', meaning: 'mood', style: 'genz', votes: 12 },
+      { term: 'slaps', meaning: 'really good', style: 'genz', votes: 9 },
+      { term: 'cap', meaning: 'lie', style: 'genz', votes: 15 },
+      { term: 'no cap', meaning: 'no lie', style: 'genz', votes: 14 },
+      { term: 'bussin', meaning: 'amazing', style: 'genz', votes: 11 },
+      { term: 'fr', meaning: 'for real', style: 'genz', votes: 13 },
+      { term: 'finna', meaning: 'going to', style: 'genz', votes: 7 },
+      { term: 'sus', meaning: 'suspicious', style: 'genz', votes: 16 },
+      { term: 'bet', meaning: 'okay', style: 'genz', votes: 8 },
+      { term: 'periodt', meaning: 'end of story', style: 'genz', votes: 6 },
+      { term: 'slay', meaning: 'do great', style: 'genz', votes: 10 },
+      { term: 'tea', meaning: 'gossip', style: 'genz', votes: 9 },
+      { term: 'stan', meaning: 'big fan', style: 'genz', votes: 7 },
+      { term: 'simp', meaning: 'someone who does too much for someone they like', style: 'genz', votes: 12 },
+      { term: 'ghosting', meaning: 'ignoring someone completely', style: 'genz', votes: 8 },
+      { term: 'flex', meaning: 'show off', style: 'genz', votes: 9 },
+      { term: 'salty', meaning: 'bitter or upset', style: 'genz', votes: 7 },
+      { term: 'woke', meaning: 'aware of social issues', style: 'genz', votes: 11 },
+      { term: 'basic', meaning: 'mainstream or unoriginal', style: 'genz', votes: 6 },
+      { term: 'extra', meaning: 'over the top', style: 'genz', votes: 8 },
+      { term: 'mood', meaning: 'relatable feeling', style: 'genz', votes: 10 },
+      { term: 'goals', meaning: 'aspirational', style: 'genz', votes: 7 },
+      { term: 'fomo', meaning: 'fear of missing out', style: 'genz', votes: 9 },
+      { term: 'yolo', meaning: 'you only live once', style: 'genz', votes: 5 },
+      { term: 'finsta', meaning: 'fake instagram account', style: 'genz', votes: 6 },
+      { term: 'thirsty', meaning: 'desperate for attention', style: 'genz', votes: 8 },
+      { term: 'savage', meaning: 'brutally honest', style: 'genz', votes: 9 },
+      { term: 'lowkey', meaning: 'secretly or quietly', style: 'genz', votes: 7 },
+      { term: 'highkey', meaning: 'obviously or openly', style: 'genz', votes: 6 },
+      { term: 'ship', meaning: 'support a relationship', style: 'genz', votes: 8 },
+      { term: 'lmaoo', meaning: 'laughing my ass off', style: 'genz', votes: 14 },
+      { term: 'lol', meaning: 'laugh out loud', style: 'genz', votes: 15 },
+      { term: 'wtw', meaning: 'what\'s the word', style: 'genz', votes: 12 },
+      { term: 'pmo', meaning: 'put me on', style: 'genz', votes: 11 },
+      { term: 'wassgood', meaning: 'what\'s good', style: 'genz', votes: 10 },
+      { term: 'wap', meaning: 'wet ass pussy', style: 'genz', votes: 13 },
+      { term: 'stg', meaning: 'swear to god', style: 'genz', votes: 9 },
+      { term: 'idk', meaning: 'I don\'t know', style: 'genz', votes: 15 },
+      { term: 'idc', meaning: 'I don\'t care', style: 'genz', votes: 12 },
+      { term: 'ngl', meaning: 'not gonna lie', style: 'genz', votes: 13 },
+      { term: 'tbh', meaning: 'to be honest', style: 'genz', votes: 11 },
+      { term: 'imo', meaning: 'in my opinion', style: 'genz', votes: 8 },
+      { term: 'asap', meaning: 'as soon as possible', style: 'genz', votes: 10 },
+      { term: 'rn', meaning: 'right now', style: 'genz', votes: 12 },
+      { term: 'atm', meaning: 'at the moment', style: 'genz', votes: 9 },
+      { term: 'btw', meaning: 'by the way', style: 'genz', votes: 8 },
+      { term: 'fyi', meaning: 'for your information', style: 'genz', votes: 7 },
+      { term: 'smh', meaning: 'shaking my head', style: 'genz', votes: 11 },
+      { term: 'fml', meaning: 'fuck my life', style: 'genz', votes: 10 },
+      { term: 'omw', meaning: 'on my way', style: 'genz', votes: 9 },
+      { term: 'brb', meaning: 'be right back', style: 'genz', votes: 8 },
+      { term: 'ttyl', meaning: 'talk to you later', style: 'genz', votes: 7 },
+      { term: 'ily', meaning: 'I love you', style: 'genz', votes: 12 },
+      { term: 'ily2', meaning: 'I love you too', style: 'genz', votes: 10 },
+      { term: 'ily3', meaning: 'I love you three', style: 'genz', votes: 8 },
+      { term: 'ily4', meaning: 'I love you four', style: 'genz', votes: 6 },
+      { term: 'ily5', meaning: 'I love you five', style: 'genz', votes: 5 },
+      { term: 'ily6', meaning: 'I love you six', style: 'genz', votes: 4 },
+      { term: 'ily7', meaning: 'I love you seven', style: 'genz', votes: 3 },
+      { term: 'ily8', meaning: 'I love you eight', style: 'genz', votes: 2 },
+      { term: 'ily9', meaning: 'I love you nine', style: 'genz', votes: 1 },
+      { term: 'ily10', meaning: 'I love you ten', style: 'genz', votes: 1 },
+      { term: 'period', meaning: 'end of story', style: 'genz', votes: 13 },
+      { term: 'and i oop', meaning: 'surprised reaction', style: 'genz', votes: 9 },
+      { term: 'sksksk', meaning: 'laughing', style: 'genz', votes: 8 },
+      { term: 'and i oop sksksk', meaning: 'surprised and laughing', style: 'genz', votes: 7 },
+      { term: 'bestie', meaning: 'best friend', style: 'genz', votes: 14 },
+      { term: 'bestie periodt', meaning: 'best friend end of story', style: 'genz', votes: 12 },
+      { term: 'bestie no cap', meaning: 'best friend no lie', style: 'genz', votes: 11 },
+      { term: 'bestie fr fr', meaning: 'best friend for real for real', style: 'genz', votes: 10 },
+      { term: 'bestie on god', meaning: 'best friend I swear', style: 'genz', votes: 9 },
+      { term: 'bestie stg', meaning: 'best friend swear to god', style: 'genz', votes: 8 },
+      { term: 'bestie ngl', meaning: 'best friend not gonna lie', style: 'genz', votes: 7 },
+      { term: 'bestie tbh', meaning: 'best friend to be honest', style: 'genz', votes: 6 },
+      { term: 'bestie imo', meaning: 'best friend in my opinion', style: 'genz', votes: 5 },
+      { term: 'bestie asap', meaning: 'best friend as soon as possible', style: 'genz', votes: 4 },
+      { term: 'bestie rn', meaning: 'best friend right now', style: 'genz', votes: 3 },
+      { term: 'bestie atm', meaning: 'best friend at the moment', style: 'genz', votes: 2 },
+      { term: 'bestie btw', meaning: 'best friend by the way', style: 'genz', votes: 1 },
+      { term: 'bestie fyi', meaning: 'best friend for your information', style: 'genz', votes: 1 },
+      { term: 'bestie smh', meaning: 'best friend shaking my head', style: 'genz', votes: 1 },
+      { term: 'bestie fml', meaning: 'best friend fuck my life', style: 'genz', votes: 1 },
+      { term: 'bestie omw', meaning: 'best friend on my way', style: 'genz', votes: 1 },
+      { term: 'bestie brb', meaning: 'best friend be right back', style: 'genz', votes: 1 },
+      { term: 'bestie ttyl', meaning: 'best friend talk to you later', style: 'genz', votes: 1 },
+      { term: 'bestie ily', meaning: 'best friend I love you', style: 'genz', votes: 1 },
+      { term: 'bestie ily2', meaning: 'best friend I love you too', style: 'genz', votes: 1 },
+      { term: 'bestie ily3', meaning: 'best friend I love you three', style: 'genz', votes: 1 },
+      { term: 'bestie ily4', meaning: 'best friend I love you four', style: 'genz', votes: 1 },
+      { term: 'bestie ily5', meaning: 'best friend I love you five', style: 'genz', votes: 1 },
+      { term: 'bestie ily6', meaning: 'best friend I love you six', style: 'genz', votes: 1 },
+      { term: 'bestie ily7', meaning: 'best friend I love you seven', style: 'genz', votes: 1 },
+      { term: 'bestie ily8', meaning: 'best friend I love you eight', style: 'genz', votes: 1 },
+      { term: 'bestie ily9', meaning: 'best friend I love you nine', style: 'genz', votes: 1 },
+      { term: 'bestie ily10', meaning: 'best friend I love you ten', style: 'genz', votes: 1 },
+      { term: 'on god', meaning: 'I swear', style: 'genz', votes: 13 },
+      { term: 'fr fr', meaning: 'for real for real', style: 'genz', votes: 12 },
+      { term: 'no cap fr', meaning: 'no lie for real', style: 'genz', votes: 11 },
+      { term: 'no cap fr fr', meaning: 'no lie for real for real', style: 'genz', votes: 10 },
+      { term: 'no cap on god', meaning: 'no lie I swear', style: 'genz', votes: 9 },
+      { term: 'no cap stg', meaning: 'no lie swear to god', style: 'genz', votes: 8 },
+      { term: 'no cap ngl', meaning: 'no lie not gonna lie', style: 'genz', votes: 7 },
+      { term: 'no cap tbh', meaning: 'no lie to be honest', style: 'genz', votes: 6 },
+      { term: 'no cap imo', meaning: 'no lie in my opinion', style: 'genz', votes: 5 },
+      { term: 'no cap asap', meaning: 'no lie as soon as possible', style: 'genz', votes: 4 },
+      { term: 'no cap rn', meaning: 'no lie right now', style: 'genz', votes: 3 },
+      { term: 'no cap atm', meaning: 'no lie at the moment', style: 'genz', votes: 2 },
+      { term: 'no cap btw', meaning: 'no lie by the way', style: 'genz', votes: 1 },
+      { term: 'no cap fyi', meaning: 'no lie for your information', style: 'genz', votes: 1 },
+      { term: 'no cap smh', meaning: 'no lie shaking my head', style: 'genz', votes: 1 },
+      { term: 'no cap fml', meaning: 'no lie fuck my life', style: 'genz', votes: 1 },
+      { term: 'no cap omw', meaning: 'no lie on my way', style: 'genz', votes: 1 },
+      { term: 'no cap brb', meaning: 'no lie be right back', style: 'genz', votes: 1 },
+      { term: 'no cap ttyl', meaning: 'no lie talk to you later', style: 'genz', votes: 1 },
+      { term: 'no cap ily', meaning: 'no lie I love you', style: 'genz', votes: 1 },
+      { term: 'no cap ily2', meaning: 'no lie I love you too', style: 'genz', votes: 1 },
+      { term: 'no cap ily3', meaning: 'no lie I love you three', style: 'genz', votes: 1 },
+      { term: 'no cap ily4', meaning: 'no lie I love you four', style: 'genz', votes: 1 },
+      { term: 'no cap ily5', meaning: 'no lie I love you five', style: 'genz', votes: 1 },
+      { term: 'no cap ily6', meaning: 'no lie I love you six', style: 'genz', votes: 1 },
+      { term: 'no cap ily7', meaning: 'no lie I love you seven', style: 'genz', votes: 1 },
+      { term: 'no cap ily8', meaning: 'no lie I love you eight', style: 'genz', votes: 1 },
+      { term: 'no cap ily9', meaning: 'no lie I love you nine', style: 'genz', votes: 1 },
+      { term: 'no cap ily10', meaning: 'no lie I love you ten', style: 'genz', votes: 1 },
+      { term: 'deadass', meaning: 'seriously', style: 'genz', votes: 14 },
+      { term: 'deadass no cap', meaning: 'seriously no lie', style: 'genz', votes: 13 },
+      { term: 'deadass fr', meaning: 'seriously for real', style: 'genz', votes: 12 },
+      { term: 'deadass fr fr', meaning: 'seriously for real for real', style: 'genz', votes: 11 },
+      { term: 'deadass on god', meaning: 'seriously I swear', style: 'genz', votes: 10 },
+      { term: 'deadass stg', meaning: 'seriously swear to god', style: 'genz', votes: 9 },
+      { term: 'deadass ngl', meaning: 'seriously not gonna lie', style: 'genz', votes: 8 },
+      { term: 'deadass tbh', meaning: 'seriously to be honest', style: 'genz', votes: 7 },
+      { term: 'deadass imo', meaning: 'seriously in my opinion', style: 'genz', votes: 6 },
+      { term: 'deadass asap', meaning: 'seriously as soon as possible', style: 'genz', votes: 5 },
+      { term: 'deadass rn', meaning: 'seriously right now', style: 'genz', votes: 4 },
+      { term: 'deadass atm', meaning: 'seriously at the moment', style: 'genz', votes: 3 },
+      { term: 'deadass btw', meaning: 'seriously by the way', style: 'genz', votes: 2 },
+      { term: 'deadass fyi', meaning: 'seriously for your information', style: 'genz', votes: 1 },
+      { term: 'deadass smh', meaning: 'seriously shaking my head', style: 'genz', votes: 1 },
+      { term: 'deadass fml', meaning: 'seriously fuck my life', style: 'genz', votes: 1 },
+      { term: 'deadass omw', meaning: 'seriously on my way', style: 'genz', votes: 1 },
+      { term: 'deadass brb', meaning: 'seriously be right back', style: 'genz', votes: 1 },
+      { term: 'deadass ttyl', meaning: 'seriously talk to you later', style: 'genz', votes: 1 },
+      { term: 'deadass ily', meaning: 'seriously I love you', style: 'genz', votes: 1 },
+      { term: 'deadass ily2', meaning: 'seriously I love you too', style: 'genz', votes: 1 },
+      { term: 'deadass ily3', meaning: 'seriously I love you three', style: 'genz', votes: 1 },
+      { term: 'deadass ily4', meaning: 'seriously I love you four', style: 'genz', votes: 1 },
+      { term: 'deadass ily5', meaning: 'seriously I love you five', style: 'genz', votes: 1 },
+      { term: 'deadass ily6', meaning: 'seriously I love you six', style: 'genz', votes: 1 },
+      { term: 'deadass ily7', meaning: 'seriously I love you seven', style: 'genz', votes: 1 },
+      { term: 'deadass ily8', meaning: 'seriously I love you eight', style: 'genz', votes: 1 },
+      { term: 'deadass ily9', meaning: 'seriously I love you nine', style: 'genz', votes: 1 },
+      { term: 'deadass ily10', meaning: 'seriously I love you ten', style: 'genz', votes: 1 },
+      { term: 'ong', meaning: 'on god', style: 'genz', votes: 12 },
+      { term: 'ong fr', meaning: 'on god for real', style: 'genz', votes: 11 },
+      { term: 'ong fr fr', meaning: 'on god for real for real', style: 'genz', votes: 10 },
+      { term: 'ong no cap', meaning: 'on god no lie', style: 'genz', votes: 9 },
+      { term: 'ong stg', meaning: 'on god swear to god', style: 'genz', votes: 8 },
+      { term: 'ong ngl', meaning: 'on god not gonna lie', style: 'genz', votes: 7 },
+      { term: 'ong tbh', meaning: 'on god to be honest', style: 'genz', votes: 6 },
+      { term: 'ong imo', meaning: 'on god in my opinion', style: 'genz', votes: 5 },
+      { term: 'ong asap', meaning: 'on god as soon as possible', style: 'genz', votes: 4 },
+      { term: 'ong rn', meaning: 'on god right now', style: 'genz', votes: 3 },
+      { term: 'ong atm', meaning: 'on god at the moment', style: 'genz', votes: 2 },
+      { term: 'ong btw', meaning: 'on god by the way', style: 'genz', votes: 1 },
+      { term: 'ong fyi', meaning: 'on god for your information', style: 'genz', votes: 1 },
+      { term: 'ong smh', meaning: 'on god shaking my head', style: 'genz', votes: 1 },
+      { term: 'ong fml', meaning: 'on god fuck my life', style: 'genz', votes: 1 },
+      { term: 'ong omw', meaning: 'on god on my way', style: 'genz', votes: 1 },
+      { term: 'ong brb', meaning: 'on god be right back', style: 'genz', votes: 1 },
+      { term: 'ong ttyl', meaning: 'on god talk to you later', style: 'genz', votes: 1 },
+      { term: 'ong ily', meaning: 'on god I love you', style: 'genz', votes: 1 },
+      { term: 'ong ily2', meaning: 'on god I love you too', style: 'genz', votes: 1 },
+      { term: 'ong ily3', meaning: 'on god I love you three', style: 'genz', votes: 1 },
+      { term: 'ong ily4', meaning: 'on god I love you four', style: 'genz', votes: 1 },
+      { term: 'ong ily5', meaning: 'on god I love you five', style: 'genz', votes: 1 },
+      { term: 'ong ily6', meaning: 'on god I love you six', style: 'genz', votes: 1 },
+      { term: 'ong ily7', meaning: 'on god I love you seven', style: 'genz', votes: 1 },
+      { term: 'ong ily8', meaning: 'on god I love you eight', style: 'genz', votes: 1 },
+      { term: 'ong ily9', meaning: 'on god I love you nine', style: 'genz', votes: 1 },
+      { term: 'ong ily10', meaning: 'on god I love you ten', style: 'genz', votes: 1 },
+      { term: 'frfr', meaning: 'for real for real', style: 'genz', votes: 13 },
+      { term: 'frfr no cap', meaning: 'for real for real no lie', style: 'genz', votes: 12 },
+      { term: 'frfr on god', meaning: 'for real for real I swear', style: 'genz', votes: 11 },
+      { term: 'frfr stg', meaning: 'for real for real swear to god', style: 'genz', votes: 10 },
+      { term: 'frfr ngl', meaning: 'for real for real not gonna lie', style: 'genz', votes: 9 },
+      { term: 'frfr tbh', meaning: 'for real for real to be honest', style: 'genz', votes: 8 },
+      { term: 'frfr imo', meaning: 'for real for real in my opinion', style: 'genz', votes: 7 },
+      { term: 'frfr asap', meaning: 'for real for real as soon as possible', style: 'genz', votes: 6 },
+      { term: 'frfr rn', meaning: 'for real for real right now', style: 'genz', votes: 5 },
+      { term: 'frfr atm', meaning: 'for real for real at the moment', style: 'genz', votes: 4 },
+      { term: 'frfr btw', meaning: 'for real for real by the way', style: 'genz', votes: 3 },
+      { term: 'frfr fyi', meaning: 'for real for real for your information', style: 'genz', votes: 2 },
+      { term: 'frfr smh', meaning: 'for real for real shaking my head', style: 'genz', votes: 1 },
+      { term: 'frfr fml', meaning: 'for real for real fuck my life', style: 'genz', votes: 1 },
+      { term: 'frfr omw', meaning: 'for real for real on my way', style: 'genz', votes: 1 },
+      { term: 'frfr brb', meaning: 'for real for real be right back', style: 'genz', votes: 1 },
+      { term: 'frfr ttyl', meaning: 'for real for real talk to you later', style: 'genz', votes: 1 },
+      { term: 'frfr ily', meaning: 'for real for real I love you', style: 'genz', votes: 1 },
+      { term: 'frfr ily2', meaning: 'for real for real I love you too', style: 'genz', votes: 1 },
+      { term: 'frfr ily3', meaning: 'for real for real I love you three', style: 'genz', votes: 1 },
+      { term: 'frfr ily4', meaning: 'for real for real I love you four', style: 'genz', votes: 1 },
+      { term: 'frfr ily5', meaning: 'for real for real I love you five', style: 'genz', votes: 1 },
+      { term: 'frfr ily6', meaning: 'for real for real I love you six', style: 'genz', votes: 1 },
+      { term: 'frfr ily7', meaning: 'for real for real I love you seven', style: 'genz', votes: 1 },
+      { term: 'frfr ily8', meaning: 'for real for real I love you eight', style: 'genz', votes: 1 },
+      { term: 'frfr ily9', meaning: 'for real for real I love you nine', style: 'genz', votes: 1 },
+      { term: 'frfr ily10', meaning: 'for real for real I love you ten', style: 'genz', votes: 1 },
+      
+      // 90s Slang (Classic)
       { term: 'fly', meaning: 'cool', style: '90s', votes: 7 },
       { term: 'homie', meaning: 'friend', style: '90s', votes: 6 },
+      { term: 'word', meaning: 'agreed', style: '90s', votes: 8 },
+      { term: 'da bomb', meaning: 'the best', style: '90s', votes: 9 },
+      { term: 'aight', meaning: 'alright', style: '90s', votes: 5 },
+      { term: 'peace out', meaning: 'goodbye', style: '90s', votes: 7 },
+      { term: 'chill', meaning: 'relax', style: '90s', votes: 6 },
+      { term: 'tight', meaning: 'cool', style: '90s', votes: 8 },
+      { term: 'fresh', meaning: 'new and cool', style: '90s', votes: 5 },
+      { term: 'phat', meaning: 'excellent', style: '90s', votes: 4 },
+      { term: 'dope', meaning: 'awesome', style: '90s', votes: 7 },
+      { term: 'wack', meaning: 'bad', style: '90s', votes: 6 },
+      { term: 'yo', meaning: 'hey', style: '90s', votes: 5 },
+      { term: 'sup', meaning: 'what\'s up', style: '90s', votes: 6 },
+      { term: 'rad', meaning: 'radical or cool', style: '90s', votes: 4 },
+      { term: 'tubular', meaning: 'awesome', style: '90s', votes: 3 },
+      { term: 'bodacious', meaning: 'amazing', style: '90s', votes: 3 },
+      { term: 'gnarly', meaning: 'cool or dangerous', style: '90s', votes: 4 },
+      { term: 'bogus', meaning: 'fake or bad', style: '90s', votes: 5 },
+      { term: 'hella', meaning: 'very', style: '90s', votes: 6 },
+      { term: 'dude', meaning: 'guy or friend', style: '90s', votes: 7 },
+      { term: 'bro', meaning: 'brother or friend', style: '90s', votes: 8 },
+      { term: 'sick', meaning: 'cool', style: '90s', votes: 6 },
+      { term: 'sweet', meaning: 'cool', style: '90s', votes: 5 },
+      { term: 'awesome', meaning: 'great', style: '90s', votes: 6 },
+      { term: 'cool', meaning: 'good', style: '90s', votes: 7 },
+      { term: 'bad', meaning: 'good', style: '90s', votes: 4 },
+      { term: 'wicked', meaning: 'very cool', style: '90s', votes: 5 },
+      { term: 'killer', meaning: 'amazing', style: '90s', votes: 4 },
+      
+      // Shakespeare Slang (Classical)
       { term: 'thou', meaning: 'you', style: 'shakespeare', votes: 5 },
       { term: 'art', meaning: 'are', style: 'shakespeare', votes: 4 },
+      { term: 'doth', meaning: 'does', style: 'shakespeare', votes: 6 },
+      { term: 'forsooth', meaning: 'indeed', style: 'shakespeare', votes: 7 },
+      { term: 'prithee', meaning: 'please', style: 'shakespeare', votes: 5 },
+      { term: 'hark', meaning: 'listen', style: 'shakespeare', votes: 4 },
+      { term: 'alas', meaning: 'unfortunately', style: 'shakespeare', votes: 6 },
+      { term: 'methinks', meaning: 'I think', style: 'shakespeare', votes: 5 },
+      { term: 'verily', meaning: 'truly', style: 'shakespeare', votes: 4 },
+      { term: 'anon', meaning: 'soon', style: 'shakespeare', votes: 3 },
+      { term: 'wherefore', meaning: 'why', style: 'shakespeare', votes: 5 },
+      { term: 'nay', meaning: 'no', style: 'shakespeare', votes: 4 },
+      { term: 'aye', meaning: 'yes', style: 'shakespeare', votes: 3 },
+      { term: 'tis', meaning: 'it is', style: 'shakespeare', votes: 4 },
+      { term: 'twas', meaning: 'it was', style: 'shakespeare', votes: 3 },
+      { term: 'hath', meaning: 'has', style: 'shakespeare', votes: 4 },
+      { term: 'hast', meaning: 'have', style: 'shakespeare', votes: 3 },
+      { term: 'thy', meaning: 'your', style: 'shakespeare', votes: 4 },
+      { term: 'thee', meaning: 'you', style: 'shakespeare', votes: 3 },
+      { term: 'mine', meaning: 'my', style: 'shakespeare', votes: 3 },
+      { term: 'thine', meaning: 'yours', style: 'shakespeare', votes: 3 },
+      { term: 'ere', meaning: 'before', style: 'shakespeare', votes: 2 },
+      { term: 'hence', meaning: 'from here', style: 'shakespeare', votes: 3 },
+      { term: 'hither', meaning: 'here', style: 'shakespeare', votes: 2 },
+      { term: 'thither', meaning: 'there', style: 'shakespeare', votes: 2 },
+      { term: 'whither', meaning: 'where', style: 'shakespeare', votes: 2 },
+      { term: 'whence', meaning: 'from where', style: 'shakespeare', votes: 2 },
+      { term: 'betwixt', meaning: 'between', style: 'shakespeare', votes: 2 },
+      
+      // Ancient Proverb Slang (Wisdom)
       { term: 'wealth', meaning: 'money', style: 'proverb', votes: 3 },
-      { term: 'companion', meaning: 'friend', style: 'proverb', votes: 2 }
+      { term: 'companion', meaning: 'friend', style: 'proverb', votes: 2 },
+      { term: 'journey', meaning: 'life', style: 'proverb', votes: 4 },
+      { term: 'wisdom', meaning: 'knowledge', style: 'proverb', votes: 5 },
+      { term: 'destiny', meaning: 'fate', style: 'proverb', votes: 3 },
+      { term: 'harmony', meaning: 'peace', style: 'proverb', votes: 4 },
+      { term: 'courage', meaning: 'bravery', style: 'proverb', votes: 3 },
+      { term: 'virtue', meaning: 'goodness', style: 'proverb', votes: 2 },
+      { term: 'serenity', meaning: 'calmness', style: 'proverb', votes: 3 },
+      { term: 'eternity', meaning: 'forever', style: 'proverb', votes: 2 },
+      { term: 'legacy', meaning: 'heritage', style: 'proverb', votes: 3 },
+      { term: 'essence', meaning: 'core', style: 'proverb', votes: 2 },
+      { term: 'enlightenment', meaning: 'understanding', style: 'proverb', votes: 3 },
+      { term: 'transcendence', meaning: 'beyond normal limits', style: 'proverb', votes: 2 },
+      { term: 'divine', meaning: 'godly', style: 'proverb', votes: 3 },
+      { term: 'sacred', meaning: 'holy', style: 'proverb', votes: 2 },
+      { term: 'blessing', meaning: 'gift', style: 'proverb', votes: 3 },
+      { term: 'grace', meaning: 'elegance', style: 'proverb', votes: 2 },
+      { term: 'noble', meaning: 'honorable', style: 'proverb', votes: 3 },
+      { term: 'dignity', meaning: 'self-respect', style: 'proverb', votes: 2 },
+      { term: 'integrity', meaning: 'honesty', style: 'proverb', votes: 3 },
+      { term: 'humility', meaning: 'modesty', style: 'proverb', votes: 2 },
+      { term: 'compassion', meaning: 'kindness', style: 'proverb', votes: 3 },
+      { term: 'forgiveness', meaning: 'pardon', style: 'proverb', votes: 2 },
+      { term: 'gratitude', meaning: 'thankfulness', style: 'proverb', votes: 3 },
+      { term: 'patience', meaning: 'waiting calmly', style: 'proverb', votes: 2 },
+      { term: 'perseverance', meaning: 'determination', style: 'proverb', votes: 3 },
+      { term: 'resilience', meaning: 'ability to recover', style: 'proverb', votes: 2 },
+      
+      // Pirate Slang (Seafaring)
+      { term: 'matey', meaning: 'friend', style: 'pirate', votes: 5 },
+      { term: 'arr', meaning: 'yes', style: 'pirate', votes: 4 },
+      { term: 'ahoy', meaning: 'hello', style: 'pirate', votes: 6 },
+      { term: 'scurvy', meaning: 'bad', style: 'pirate', votes: 5 },
+      { term: 'booty', meaning: 'treasure', style: 'pirate', votes: 4 },
+      { term: 'landlubber', meaning: 'non-sailor', style: 'pirate', votes: 3 },
+      { term: 'shiver me timbers', meaning: 'wow', style: 'pirate', votes: 7 },
+      { term: 'yo ho ho', meaning: 'laugh', style: 'pirate', votes: 4 },
+      { term: 'pieces of eight', meaning: 'money', style: 'pirate', votes: 3 },
+      { term: 'walk the plank', meaning: 'get in trouble', style: 'pirate', votes: 5 },
+      { term: 'avast', meaning: 'stop', style: 'pirate', votes: 4 },
+      { term: 'aye aye', meaning: 'yes sir', style: 'pirate', votes: 3 },
+      { term: 'blimey', meaning: 'wow', style: 'pirate', votes: 4 },
+      { term: 'captain', meaning: 'leader', style: 'pirate', votes: 5 },
+      { term: 'crew', meaning: 'team', style: 'pirate', votes: 4 },
+      { term: 'deck', meaning: 'floor', style: 'pirate', votes: 3 },
+      { term: 'helm', meaning: 'steering wheel', style: 'pirate', votes: 2 },
+      { term: 'keelhaul', meaning: 'punish severely', style: 'pirate', votes: 3 },
+      { term: 'maroon', meaning: 'abandon', style: 'pirate', votes: 2 },
+      { term: 'parrot', meaning: 'bird', style: 'pirate', votes: 3 },
+      { term: 'rum', meaning: 'alcohol', style: 'pirate', votes: 4 },
+      { term: 'sail', meaning: 'travel', style: 'pirate', votes: 3 },
+      { term: 'ship', meaning: 'boat', style: 'pirate', votes: 4 },
+      { term: 'swab', meaning: 'clean', style: 'pirate', votes: 2 },
+      { term: 'swashbuckler', meaning: 'adventurer', style: 'pirate', votes: 3 },
+      { term: 'treasure', meaning: 'valuable items', style: 'pirate', votes: 4 },
+      { term: 'voyage', meaning: 'journey', style: 'pirate', votes: 3 },
+      { term: 'weigh anchor', meaning: 'start journey', style: 'pirate', votes: 2 },
+      
+      // Valley Girl Slang (California)
+      { term: 'like', meaning: 'um', style: 'valley', votes: 6 },
+      { term: 'totally', meaning: 'completely', style: 'valley', votes: 5 },
+      { term: 'omg', meaning: 'oh my god', style: 'valley', votes: 8 },
+      { term: 'whatever', meaning: 'I don\'t care', style: 'valley', votes: 7 },
+      { term: 'gag me', meaning: 'disgusting', style: 'valley', votes: 4 },
+      { term: 'as if', meaning: 'yeah right', style: 'valley', votes: 6 },
+      { term: 'duh', meaning: 'obviously', style: 'valley', votes: 5 },
+      { term: 'for sure', meaning: 'definitely', style: 'valley', votes: 4 },
+      { term: 'no way', meaning: 'impossible', style: 'valley', votes: 5 },
+      { term: 'way', meaning: 'very', style: 'valley', votes: 3 },
+      { term: 'so', meaning: 'very', style: 'valley', votes: 4 },
+      { term: 'seriously', meaning: 'really', style: 'valley', votes: 3 },
+      { term: 'literally', meaning: 'actually', style: 'valley', votes: 5 },
+      { term: 'fer sure', meaning: 'for sure', style: 'valley', votes: 4 },
+      { term: 'gross', meaning: 'disgusting', style: 'valley', votes: 3 },
+      { term: 'awesome', meaning: 'great', style: 'valley', votes: 5 },
+      { term: 'amazing', meaning: 'incredible', style: 'valley', votes: 4 },
+      { term: 'incredible', meaning: 'unbelievable', style: 'valley', votes: 3 },
+      { term: 'unbelievable', meaning: 'amazing', style: 'valley', votes: 4 },
+      { term: 'fantastic', meaning: 'wonderful', style: 'valley', votes: 3 },
+      { term: 'wonderful', meaning: 'great', style: 'valley', votes: 4 },
+      { term: 'perfect', meaning: 'ideal', style: 'valley', votes: 3 },
+      { term: 'ideal', meaning: 'perfect', style: 'valley', votes: 2 },
+      { term: 'fabulous', meaning: 'wonderful', style: 'valley', votes: 4 },
+      { term: 'gorgeous', meaning: 'beautiful', style: 'valley', votes: 3 },
+      { term: 'stunning', meaning: 'amazing', style: 'valley', votes: 4 },
+      { term: 'breathtaking', meaning: 'amazing', style: 'valley', votes: 3 },
+      { term: 'outrageous', meaning: 'shocking', style: 'valley', votes: 4 },
+      
+      // British Slang (UK)
+      { term: 'brilliant', meaning: 'great', style: 'british', votes: 4 },
+      { term: 'blimey', meaning: 'wow', style: 'british', votes: 3 },
+      { term: 'mate', meaning: 'friend', style: 'british', votes: 5 },
+      { term: 'innit', meaning: 'isn\'t it', style: 'british', votes: 6 },
+      { term: 'cheers', meaning: 'thanks', style: 'british', votes: 4 },
+      { term: 'bloody', meaning: 'very', style: 'british', votes: 3 },
+      { term: 'proper', meaning: 'real', style: 'british', votes: 4 },
+      { term: 'chuffed', meaning: 'happy', style: 'british', votes: 3 },
+      { term: 'gutted', meaning: 'disappointed', style: 'british', votes: 4 },
+      { term: 'minging', meaning: 'disgusting', style: 'british', votes: 2 },
+      { term: 'sick', meaning: 'cool', style: 'british', votes: 3 },
+      { term: 'banter', meaning: 'funny talk', style: 'british', votes: 4 },
+      { term: 'sorted', meaning: 'fixed', style: 'british', votes: 3 },
+      { term: 'reckon', meaning: 'think', style: 'british', votes: 2 },
+      { term: 'bollocks', meaning: 'nonsense', style: 'british', votes: 3 },
+      { term: 'bugger', meaning: 'person', style: 'british', votes: 2 },
+      { term: 'crikey', meaning: 'wow', style: 'british', votes: 3 },
+      { term: 'dodgy', meaning: 'suspicious', style: 'british', votes: 4 },
+      { term: 'fancy', meaning: 'like', style: 'british', votes: 3 },
+      { term: 'gobsmacked', meaning: 'surprised', style: 'british', votes: 4 },
+      { term: 'knackered', meaning: 'tired', style: 'british', votes: 3 },
+      { term: 'lovely', meaning: 'nice', style: 'british', votes: 4 },
+      { term: 'mental', meaning: 'crazy', style: 'british', votes: 3 },
+      { term: 'naff', meaning: 'uncool', style: 'british', votes: 2 },
+      { term: 'nosh', meaning: 'food', style: 'british', votes: 3 },
+      { term: 'pants', meaning: 'bad', style: 'british', votes: 3 },
+      { term: 'quid', meaning: 'pound', style: 'british', votes: 4 },
+      { term: 'rubbish', meaning: 'bad', style: 'british', votes: 3 },
+      { term: 'smashing', meaning: 'great', style: 'british', votes: 4 },
+      { term: 'tosh', meaning: 'nonsense', style: 'british', votes: 2 },
+      { term: 'wanker', meaning: 'idiot', style: 'british', votes: 3 },
+      
+      // Southern Slang (American South)
+      { term: 'yall', meaning: 'you all', style: 'southern', votes: 4 },
+      { term: 'bless', meaning: 'good', style: 'southern', votes: 3 },
+      { term: 'honey', meaning: 'friend', style: 'southern', votes: 5 },
+      { term: 'sweetie', meaning: 'dear', style: 'southern', votes: 4 },
+      { term: 'ain\'t', meaning: 'isn\'t', style: 'southern', votes: 3 },
+      { term: 'fixin', meaning: 'about to', style: 'southern', votes: 4 },
+      { term: 'reckon', meaning: 'think', style: 'southern', votes: 3 },
+      { term: 'mighty', meaning: 'very', style: 'southern', votes: 2 },
+      { term: 'yonder', meaning: 'over there', style: 'southern', votes: 3 },
+      { term: 'darlin', meaning: 'dear', style: 'southern', votes: 4 },
+      { term: 'sugar', meaning: 'sweet', style: 'southern', votes: 3 },
+      { term: 'goodness', meaning: 'wow', style: 'southern', votes: 2 },
+      { term: 'heavens', meaning: 'oh my', style: 'southern', votes: 3 },
+      { term: 'gracious', meaning: 'wow', style: 'southern', votes: 2 },
+      { term: 'blessed', meaning: 'fortunate', style: 'southern', votes: 3 },
+      { term: 'precious', meaning: 'dear', style: 'southern', votes: 4 },
+      { term: 'angel', meaning: 'sweet person', style: 'southern', votes: 3 },
+      { term: 'darling', meaning: 'dear', style: 'southern', votes: 4 },
+      { term: 'sweetheart', meaning: 'dear', style: 'southern', votes: 3 },
+      { term: 'dear', meaning: 'beloved', style: 'southern', votes: 4 },
+      { term: 'beloved', meaning: 'loved', style: 'southern', votes: 3 },
+      { term: 'cherished', meaning: 'treasured', style: 'southern', votes: 2 },
+      { term: 'treasured', meaning: 'valued', style: 'southern', votes: 3 },
+      { term: 'valued', meaning: 'appreciated', style: 'southern', votes: 2 },
+      { term: 'appreciated', meaning: 'thanked', style: 'southern', votes: 3 },
+      { term: 'thanked', meaning: 'grateful', style: 'southern', votes: 2 },
+      { term: 'grateful', meaning: 'thankful', style: 'southern', votes: 3 },
+      { term: 'thankful', meaning: 'appreciative', style: 'southern', votes: 2 },
+      { term: 'blessed', meaning: 'fortunate', style: 'southern', votes: 3 },
+      { term: 'fortunate', meaning: 'lucky', style: 'southern', votes: 2 },
+      
+      // Tech Bro Slang (Silicon Valley)
+      { term: 'revolutionary', meaning: 'amazing', style: 'techbro', votes: 5 },
+      { term: 'disruptive', meaning: 'innovative', style: 'techbro', votes: 4 },
+      { term: 'innovative', meaning: 'new', style: 'techbro', votes: 3 },
+      { term: 'scalable', meaning: 'expandable', style: 'techbro', votes: 4 },
+      { term: 'synergy', meaning: 'collaboration', style: 'techbro', votes: 3 },
+      { term: 'paradigm', meaning: 'model', style: 'techbro', votes: 2 },
+      { term: 'leverage', meaning: 'use', style: 'techbro', votes: 3 },
+      { term: 'optimize', meaning: 'improve', style: 'techbro', votes: 4 },
+      { term: 'iterate', meaning: 'repeat', style: 'techbro', votes: 3 },
+      { term: 'pivot', meaning: 'change direction', style: 'techbro', votes: 4 },
+      { term: 'bandwidth', meaning: 'time', style: 'techbro', votes: 3 },
+      { term: 'touch base', meaning: 'contact', style: 'techbro', votes: 2 },
+      { term: 'circle back', meaning: 'return to', style: 'techbro', votes: 3 },
+      { term: 'low-hanging fruit', meaning: 'easy target', style: 'techbro', votes: 2 },
+      { term: 'disrupt', meaning: 'change', style: 'techbro', votes: 4 },
+      { term: 'innovate', meaning: 'create new', style: 'techbro', votes: 3 },
+      { term: 'scale', meaning: 'grow', style: 'techbro', votes: 4 },
+      { term: 'monetize', meaning: 'make money', style: 'techbro', votes: 3 },
+      { term: 'algorithm', meaning: 'process', style: 'techbro', votes: 4 },
+      { term: 'platform', meaning: 'system', style: 'techbro', votes: 3 },
+      { term: 'ecosystem', meaning: 'environment', style: 'techbro', votes: 4 },
+      { term: 'infrastructure', meaning: 'foundation', style: 'techbro', votes: 3 },
+      { term: 'architecture', meaning: 'design', style: 'techbro', votes: 4 },
+      { term: 'framework', meaning: 'structure', style: 'techbro', votes: 3 },
+      { term: 'protocol', meaning: 'standard', style: 'techbro', votes: 4 },
+      { term: 'interface', meaning: 'connection', style: 'techbro', votes: 3 },
+      { term: 'integration', meaning: 'connection', style: 'techbro', votes: 4 },
+      { term: 'deployment', meaning: 'launch', style: 'techbro', votes: 3 },
+      { term: 'beta', meaning: 'test version', style: 'techbro', votes: 4 },
+      { term: 'MVP', meaning: 'minimum viable product', style: 'techbro', votes: 3 },
+      { term: 'ROI', meaning: 'return on investment', style: 'techbro', votes: 4 },
+      { term: 'KPI', meaning: 'key performance indicator', style: 'techbro', votes: 3 },
+      { term: 'metrics', meaning: 'measurements', style: 'techbro', votes: 4 },
+      { term: 'analytics', meaning: 'data analysis', style: 'techbro', votes: 3 },
+      { term: 'insights', meaning: 'understanding', style: 'techbro', votes: 4 },
+      { term: 'strategy', meaning: 'plan', style: 'techbro', votes: 3 },
+      { term: 'roadmap', meaning: 'plan', style: 'techbro', votes: 4 },
+      { term: 'milestone', meaning: 'achievement', style: 'techbro', votes: 3 },
+      { term: 'deadline', meaning: 'due date', style: 'techbro', votes: 4 },
+      { term: 'deliverable', meaning: 'result', style: 'techbro', votes: 3 },
+      { term: 'stakeholder', meaning: 'interested party', style: 'techbro', votes: 4 },
+      { term: 'alignment', meaning: 'agreement', style: 'techbro', votes: 3 },
+      { term: 'consensus', meaning: 'agreement', style: 'techbro', votes: 4 },
+      { term: 'collaboration', meaning: 'working together', style: 'techbro', votes: 3 },
+      { term: 'partnership', meaning: 'alliance', style: 'techbro', votes: 4 },
+      { term: 'alliance', meaning: 'partnership', style: 'techbro', votes: 3 },
+      { term: 'acquisition', meaning: 'purchase', style: 'techbro', votes: 4 },
+      { term: 'merger', meaning: 'combination', style: 'techbro', votes: 3 },
+      { term: 'consolidation', meaning: 'combination', style: 'techbro', votes: 4 },
+      { term: 'restructuring', meaning: 'reorganization', style: 'techbro', votes: 3 },
+      { term: 'transformation', meaning: 'change', style: 'techbro', votes: 4 },
+      { term: 'evolution', meaning: 'development', style: 'techbro', votes: 3 },
+      { term: 'revolution', meaning: 'major change', style: 'techbro', votes: 4 },
+      { term: 'breakthrough', meaning: 'discovery', style: 'techbro', votes: 3 },
+      { term: 'game-changer', meaning: 'revolutionary', style: 'techbro', votes: 4 },
+      { term: 'next-level', meaning: 'advanced', style: 'techbro', votes: 3 },
+      { term: 'cutting-edge', meaning: 'advanced', style: 'techbro', votes: 4 },
+      { term: 'state-of-the-art', meaning: 'latest', style: 'techbro', votes: 3 },
+      { term: 'bleeding-edge', meaning: 'very advanced', style: 'techbro', votes: 4 },
+      { term: 'future-proof', meaning: 'long-lasting', style: 'techbro', votes: 3 },
+      { term: 'sustainable', meaning: 'long-term', style: 'techbro', votes: 4 },
+      { term: 'scalable', meaning: 'expandable', style: 'techbro', votes: 3 },
+      { term: 'flexible', meaning: 'adaptable', style: 'techbro', votes: 4 },
+      { term: 'agile', meaning: 'quick', style: 'techbro', votes: 3 },
+      { term: 'nimble', meaning: 'quick', style: 'techbro', votes: 4 },
+      { term: 'responsive', meaning: 'quick to react', style: 'techbro', votes: 3 },
+      { term: 'dynamic', meaning: 'changing', style: 'techbro', votes: 4 },
+      { term: 'adaptive', meaning: 'adjusting', style: 'techbro', votes: 3 },
+      { term: 'intelligent', meaning: 'smart', style: 'techbro', votes: 4 },
+      { term: 'smart', meaning: 'intelligent', style: 'techbro', votes: 3 },
+      { term: 'automated', meaning: 'automatic', style: 'techbro', votes: 4 },
+      { term: 'streamlined', meaning: 'efficient', style: 'techbro', votes: 3 },
+      { term: 'optimized', meaning: 'improved', style: 'techbro', votes: 4 },
+      { term: 'enhanced', meaning: 'improved', style: 'techbro', votes: 3 },
+      { term: 'upgraded', meaning: 'improved', style: 'techbro', votes: 4 },
+      { term: 'refined', meaning: 'improved', style: 'techbro', votes: 3 },
+      { term: 'polished', meaning: 'finished', style: 'techbro', votes: 4 },
+      { term: 'production-ready', meaning: 'finished', style: 'techbro', votes: 3 },
+      { term: 'enterprise-grade', meaning: 'professional', style: 'techbro', votes: 4 },
+      { term: 'industrial-strength', meaning: 'robust', style: 'techbro', votes: 3 },
+      { term: 'bulletproof', meaning: 'reliable', style: 'techbro', votes: 4 },
+      { term: 'rock-solid', meaning: 'reliable', style: 'techbro', votes: 3 },
+      { term: 'mission-critical', meaning: 'essential', style: 'techbro', votes: 4 },
+      { term: 'high-priority', meaning: 'important', style: 'techbro', votes: 3 },
+      { term: 'urgent', meaning: 'immediate', style: 'techbro', votes: 4 },
+      { term: 'ASAP', meaning: 'as soon as possible', style: 'techbro', votes: 3 },
+      { term: 'ETA', meaning: 'estimated time of arrival', style: 'techbro', votes: 4 },
+      { term: 'ETA', meaning: 'estimated time of arrival', style: 'techbro', votes: 4 },
+      { term: 'frfr ily10', meaning: 'for real for real I love you ten', style: 'genz', votes: 1 },
+      { term: 'vibe check', meaning: 'test of someone\'s mood or energy', style: 'genz', votes: 7 },
+      { term: 'slow', meaning: 'not quick to understand', style: 'genz', votes: 6 },
+      { term: 'mid', meaning: 'average, not impressive', style: 'genz', votes: 8 },
+      { term: 'ratio', meaning: 'outnumbered or outdone', style: 'genz', votes: 7 },
+      { term: 'drip', meaning: 'stylish outfit', style: 'genz', votes: 9 },
+      { term: 'slumped', meaning: 'very tired or asleep', style: 'genz', votes: 6 },
+      { term: 'caught in 4k', meaning: 'caught red-handed', style: 'genz', votes: 8 },
+      { term: 'sending me', meaning: 'making me laugh a lot', style: 'genz', votes: 7 },
+      { term: 'main character', meaning: 'person who stands out', style: 'genz', votes: 6 },
+      { term: 'snack', meaning: 'someone attractive', style: 'genz', votes: 8 },
+      { term: 'pressed', meaning: 'upset or bothered', style: 'genz', votes: 7 },
+      { term: 'glow up', meaning: 'impressive transformation', style: 'genz', votes: 8 },
+      { term: 'sus af', meaning: 'very suspicious', style: 'genz', votes: 7 },
+      { term: 'no chill', meaning: 'overreacting or intense', style: 'genz', votes: 6 },
+      { term: 'shook', meaning: 'shocked or surprised', style: 'genz', votes: 7 },
+      { term: 'flexin', meaning: 'showing off', style: 'genz', votes: 7 },
+      { term: 'say less', meaning: 'understood, no need to explain', style: 'genz', votes: 8 },
+      { term: 'big yikes', meaning: 'very embarrassing', style: 'genz', votes: 6 },
+      { term: 'sending it', meaning: 'going all out', style: 'genz', votes: 7 },
+      // 90s Slang (Classic)
+    ];
+
+    // Achievement definitions
+    const achievementDefinitions = [
+      { id: 'first_translation', name: 'First Steps', description: 'Complete your first translation', icon: '🎯' },
+      { id: 'style_master', name: 'Style Master', description: 'Try all translation styles', icon: '🎨' },
+      { id: 'streak_3', name: 'On Fire', description: '3-day translation streak', icon: '🔥' },
+      { id: 'streak_7', name: 'Week Warrior', description: '7-day translation streak', icon: '⚡' },
+      { id: 'points_100', name: 'Point Collector', description: 'Earn 100 points', icon: '💎' },
+      { id: 'slang_contributor', name: 'Slang Contributor', description: 'Submit 5 slang terms', icon: '📝' }
     ];
 
     // Initialize style buttons
@@ -167,6 +1065,36 @@
       recognition.start();
     }
 
+    // Copy to clipboard
+    function copyToClipboard() {
+      const output = document.getElementById('outputText').textContent;
+      if (output && output !== 'Your translation will appear here...') {
+        navigator.clipboard.writeText(output).then(() => {
+          showNotification('Copied to clipboard! 📋');
+        });
+      }
+    }
+
+    // Text-to-speech output
+    function speakOutput() {
+      const output = document.getElementById('outputText').textContent;
+      if (output && output !== 'Your translation will appear here...') {
+        const utterance = new SpeechSynthesisUtterance(output);
+        utterance.rate = 0.9;
+        utterance.pitch = 1.1;
+        speechSynthesis.speak(utterance);
+      }
+    }
+
+    // Show notification
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg z-50';
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 2000);
+    }
+
     // Theme toggle
     function toggleTheme() {
       darkMode = !darkMode;
@@ -174,11 +1102,111 @@
       document.getElementById('themeToggle').textContent = darkMode ? '☀️ Light Mode' : '🌙 Dark Mode';
     }
 
+    // Update stats
+    function updateStats() {
+      document.getElementById('streakCount').textContent = streak;
+      document.getElementById('pointsCount').textContent = points;
+      document.getElementById('achievementCount').textContent = achievements.length;
+    }
+
+    // Check and award achievements
+    function checkAchievements() {
+      const today = new Date().toDateString();
+      
+      // First translation
+      if (translationHistory.length === 1) {
+        awardAchievement('first_translation');
+      }
+
+      // Style master
+      const usedStyles = new Set(translationHistory.map(h => h.style));
+      if (usedStyles.size >= 5 && !achievements.includes('style_master')) {
+        awardAchievement('style_master');
+      }
+
+      // Streak achievements
+      if (streak >= 3 && !achievements.includes('streak_3')) {
+        awardAchievement('streak_3');
+      }
+      if (streak >= 7 && !achievements.includes('streak_7')) {
+        awardAchievement('streak_7');
+      }
+
+      // Points achievement
+      if (points >= 100 && !achievements.includes('points_100')) {
+        awardAchievement('points_100');
+      }
+    }
+
+    // Award achievement
+    function awardAchievement(achievementId) {
+      if (!achievements.includes(achievementId)) {
+        achievements.push(achievementId);
+        const achievement = achievementDefinitions.find(a => a.id === achievementId);
+        showNotification(`🏆 Achievement Unlocked: ${achievement.name}!`);
+        updateStats();
+        updateAchievementsList();
+      }
+    }
+
+    // Update achievements list
+    function updateAchievementsList() {
+      const achievementsList = document.getElementById('achievementsList');
+      achievementsList.innerHTML = '';
+      achievements.forEach(achievementId => {
+        const achievement = achievementDefinitions.find(a => a.id === achievementId);
+        const badge = document.createElement('div');
+        badge.className = 'achievement bg-yellow-500 text-black px-2 py-1 rounded-full text-xs';
+        badge.textContent = `${achievement.icon} ${achievement.name}`;
+        badge.title = achievement.description;
+        achievementsList.appendChild(badge);
+      });
+    }
+
+    // Update translation history
+    function updateHistory(input, output, style) {
+      const historyItem = { input, output, style, timestamp: new Date() };
+      translationHistory.unshift(historyItem);
+      if (translationHistory.length > 10) {
+        translationHistory.pop();
+      }
+      
+      const historyList = document.getElementById('historyList');
+      historyList.innerHTML = '';
+      translationHistory.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'history-item p-2 rounded bg-gray-800 text-sm';
+        div.innerHTML = `
+          <div class="font-bold">${item.style.toUpperCase()}</div>
+          <div class="text-gray-300">${item.input.substring(0, 30)}...</div>
+          <div class="text-cyan-300">${item.output.substring(0, 30)}...</div>
+        `;
+        div.onclick = () => {
+          document.getElementById('inputText').value = item.input;
+          currentStyle = item.style;
+          document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('bg-pink-500', 'text-white'));
+          document.querySelector(`[data-style="${item.style}"]`).classList.add('bg-pink-500', 'text-white');
+        };
+        historyList.appendChild(div);
+      });
+    }
+
+    // Update streak
+    function updateStreak() {
+      const today = new Date().toDateString();
+      if (lastTranslationDate !== today) {
+        if (lastTranslationDate === new Date(Date.now() - 86400000).toDateString()) {
+          streak++;
+        } else if (lastTranslationDate !== today) {
+          streak = 1;
+        }
+        lastTranslationDate = today;
+      }
+    }
+
     // Mock slang fetching (simulating web/X API)
     function fetchSlang() {
-      // Simulate async fetch
       setTimeout(() => {
-        // Add a new slang term (mocking web scraping)
         slangDatabase.push({
           term: 'vibe',
           meaning: 'mood',
@@ -195,11 +1223,16 @@
       slangList.innerHTML = '';
       slangDatabase
         .sort((a, b) => b.votes - a.votes)
-        .slice(0, 5)
+        .slice(0, 8)
         .forEach(slang => {
           const li = document.createElement('li');
-          li.textContent = `${slang.term}: ${slang.meaning} (${slang.style})`;
-          li.className = 'cursor-pointer hover:text-cyan-300';
+          li.className = 'cursor-pointer hover:text-cyan-300 p-1 rounded transition-colors';
+          li.innerHTML = `
+            <span class="font-bold">${slang.term}</span>: ${slang.meaning} 
+            <span class="text-xs opacity-70">(${slang.style})</span>
+            <span class="text-xs text-yellow-400">🔥 ${slang.votes}</span>
+          `;
+          li.title = `Click to vote for "${slang.term}"`;
           li.onclick = () => voteSlang(slang.term);
           slangList.appendChild(li);
         });
@@ -222,16 +1255,27 @@
         updateSlangList();
         document.getElementById('slangTerm').value = '';
         document.getElementById('slangMeaning').value = '';
-        document.getElementById('outputText').textContent = 'Slang submitted! It’s now in the database.';
+        document.getElementById('outputText').textContent = 'Slang submitted! It\'s now in the database.';
+        
+        // Check for slang contributor achievement
+        const userSubmissions = slangDatabase.filter(s => s.term === term).length;
+        if (userSubmissions >= 5) {
+          awardAchievement('slang_contributor');
+        }
       } else {
         document.getElementById('outputText').textContent = 'Please enter a term and meaning.';
       }
     }
 
-    // AI-powered translation (simulated)
+    // Enhanced AI-powered translation
     function translate() {
+      console.log('Translate function called!');
       const input = document.getElementById('inputText').value.trim();
       const output = document.getElementById('outputText');
+      
+      console.log('Input text:', input);
+      console.log('Current style:', currentStyle);
+      
       if (!input) {
         output.textContent = 'Please type or speak something to translate.';
         return;
@@ -240,37 +1284,220 @@
       let result = input;
       const slangForStyle = slangDatabase.filter(s => s.style === currentStyle);
       
-      // Contextual translation rules (simulating AI)
+      console.log('Slang for current style:', slangForStyle);
+      
+      // First, replace slang terms with their meanings
       slangForStyle.forEach(({ term, meaning }) => {
-        result = result.replace(new RegExp(`\\b${term}\\b`, 'gi'), meaning);
+        const regex = new RegExp(`\\b${term}\\b`, 'gi');
+        if (result.match(regex)) {
+          result = result.replace(regex, `[${meaning}]`);
+        }
       });
 
-      // Additional contextual transformations
+      // Also check for slang from other styles and show their meanings
+      const allSlang = slangDatabase.filter(s => s.style !== currentStyle);
+      allSlang.forEach(({ term, meaning, style }) => {
+        const regex = new RegExp(`\\b${term}\\b`, 'gi');
+        if (result.match(regex)) {
+          result = result.replace(regex, `[${meaning} (${style})]`);
+        }
+      });
+
+      // Enhanced style transformations
       if (currentStyle === 'genz') {
         result = result.replace(/going to/gi, 'finna').replace(/yes/gi, 'fr').replace(/no/gi, 'nah fam');
+        result = result.replace(/laugh out loud/gi, 'lol').replace(/oh my god/gi, 'omg');
+        result = result.replace(/what the/gi, 'wtf').replace(/in my opinion/gi, 'imo');
+        result = result.replace(/to be honest/gi, 'tbh').replace(/as soon as possible/gi, 'asap');
         result = `💬 ${result} ${Math.random() > 0.5 ? 'vibes' : 'slaps'}`;
       } else if (currentStyle === '90s') {
         result = result.replace(/okay/gi, 'aight').replace(/great/gi, 'da bomb');
+        result = result.replace(/what\'s up/gi, 'sup').replace(/see you later/gi, 'peace out');
+        result = result.replace(/that\'s cool/gi, 'that\'s tight').replace(/very good/gi, 'phat');
+        result = result.replace(/bad/gi, 'wack').replace(/awesome/gi, 'dope');
         result = `🎤 ${result} ${Math.random() > 0.5 ? 'word!' : 'peace!'}`;
       } else if (currentStyle === 'shakespeare') {
-        result = result.replace(/is/gi, 'be').replace(/do/gi, 'doth');
+        result = result.replace(/is/gi, 'be').replace(/do/gi, 'doth').replace(/you/gi, 'thou');
+        result = result.replace(/are/gi, 'art').replace(/does/gi, 'doth').replace(/please/gi, 'prithee');
+        result = result.replace(/listen/gi, 'hark').replace(/unfortunately/gi, 'alas');
+        result = result.replace(/I think/gi, 'methinks').replace(/truly/gi, 'verily');
         result = `🎭 ${result}, forsooth!`;
       } else if (currentStyle === 'proverb') {
-        result = result.replace(/time/gi, 'the river of existence');
+        result = result.replace(/time/gi, 'the river of existence').replace(/money/gi, 'wealth');
+        result = result.replace(/life/gi, 'journey').replace(/knowledge/gi, 'wisdom');
+        result = result.replace(/fate/gi, 'destiny').replace(/peace/gi, 'harmony');
+        result = result.replace(/bravery/gi, 'courage').replace(/goodness/gi, 'virtue');
         result = `📜 "${result}, as the ancients decree."`;
+      } else if (currentStyle === 'pirate') {
+        result = result.replace(/hello/gi, 'ahoy').replace(/friend/gi, 'matey').replace(/yes/gi, 'arr');
+        result = result.replace(/bad/gi, 'scurvy').replace(/treasure/gi, 'booty');
+        result = result.replace(/wow/gi, 'shiver me timbers').replace(/laugh/gi, 'yo ho ho');
+        result = result.replace(/money/gi, 'pieces of eight').replace(/stop/gi, 'avast');
+        result = `🏴‍☠️ ${result}, ye scurvy dog!`;
+      } else if (currentStyle === 'valley') {
+        result = result.replace(/like/gi, 'like, totally').replace(/good/gi, 'totally awesome');
+        result = result.replace(/oh my god/gi, 'omg').replace(/I don\'t care/gi, 'whatever');
+        result = result.replace(/disgusting/gi, 'gag me').replace(/yeah right/gi, 'as if');
+        result = result.replace(/obviously/gi, 'duh').replace(/definitely/gi, 'for sure');
+        result = result.replace(/impossible/gi, 'no way').replace(/very/gi, 'way');
+        result = `💅 ${result} ${Math.random() > 0.5 ? 'omg!' : 'like, whatever!'}`;
+      } else if (currentStyle === 'british') {
+        result = result.replace(/good/gi, 'brilliant').replace(/wow/gi, 'blimey').replace(/friend/gi, 'mate');
+        result = result.replace(/thanks/gi, 'cheers').replace(/very/gi, 'bloody');
+        result = result.replace(/real/gi, 'proper').replace(/happy/gi, 'chuffed');
+        result = result.replace(/disappointed/gi, 'gutted').replace(/disgusting/gi, 'minging');
+        result = result.replace(/cool/gi, 'sick').replace(/funny talk/gi, 'banter');
+        result = `🇬🇧 ${result}, innit?`;
+      } else if (currentStyle === 'southern') {
+        result = result.replace(/you all/gi, 'y\'all').replace(/good/gi, 'bless').replace(/friend/gi, 'honey');
+        result = result.replace(/dear/gi, 'sweetie').replace(/isn\'t/gi, 'ain\'t');
+        result = result.replace(/about to/gi, 'fixin').replace(/think/gi, 'reckon');
+        result = result.replace(/very/gi, 'mighty').replace(/over there/gi, 'yonder');
+        result = result.replace(/sweet/gi, 'sugar').replace(/wow/gi, 'goodness');
+        result = `🤠 ${result}, bless your heart!`;
+      } else if (currentStyle === 'techbro') {
+        result = result.replace(/amazing/gi, 'revolutionary').replace(/new/gi, 'disruptive').replace(/good/gi, 'innovative');
+        result = result.replace(/expandable/gi, 'scalable').replace(/collaboration/gi, 'synergy');
+        result = result.replace(/model/gi, 'paradigm').replace(/use/gi, 'leverage');
+        result = result.replace(/improve/gi, 'optimize').replace(/repeat/gi, 'iterate');
+        result = result.replace(/change direction/gi, 'pivot').replace(/time/gi, 'bandwidth');
+        result = result.replace(/contact/gi, 'touch base').replace(/return to/gi, 'circle back');
+        result = `💻 ${result} - absolutely revolutionary!`;
       }
 
-      output.textContent = result;
+      console.log('Final result:', result);
+      
+      // Create a summary of slang meanings found
+      let slangSummary = '';
+      const foundSlang = [];
+      
+      // Check for slang in the original input
+      slangDatabase.forEach(({ term, meaning, style }) => {
+        const regex = new RegExp(`\\b${term}\\b`, 'gi');
+        if (input.match(regex)) {
+          foundSlang.push({ term, meaning, style });
+        }
+      });
+      
+      if (foundSlang.length > 0) {
+        slangSummary = '\n\n📚 Slang Meanings Found:\n';
+        foundSlang.forEach(({ term, meaning, style }) => {
+          slangSummary += `• ${term} = ${meaning} (${style})\n`;
+        });
+      }
+      
+      output.textContent = result + slangSummary;
       output.classList.add('animate-pulse');
       setTimeout(() => output.classList.remove('animate-pulse'), 2000);
+
+      // Update game mechanics
+      updateStreak();
+      points += 10;
+      updateHistory(input, result, currentStyle);
+      updateStats();
+      checkAchievements();
 
       // Simulate fetching new slang
       fetchSlang();
     }
 
+    // Search slang meaning
+    function searchSlangMeaning(term) {
+      const slang = slangDatabase.find(s => s.term.toLowerCase() === term.toLowerCase());
+      if (slang) {
+        return `${slang.term}: ${slang.meaning} (${slang.style})`;
+      }
+      return null;
+    }
+
+    // Enhanced slang lookup
+    function lookupSlang() {
+      const input = document.getElementById('inputText').value.trim();
+      const words = input.split(' ');
+      let foundSlang = [];
+      
+      words.forEach(word => {
+        const meaning = searchSlangMeaning(word);
+        if (meaning) {
+          foundSlang.push(meaning);
+        }
+      });
+      
+      if (foundSlang.length > 0) {
+        const output = document.getElementById('outputText');
+        output.innerHTML = `
+          <div class="text-sm text-cyan-300 mb-2">🔍 Slang found in your text:</div>
+          ${foundSlang.map(slang => `<div class="text-xs mb-1">• ${slang}</div>`).join('')}
+        `;
+      }
+    }
+
+    // Try example function
+    function tryExample(text) {
+      document.getElementById('inputText').value = text;
+      translate();
+    }
+
     // Initialize
     updateSlangList();
+    updateStats();
+    updateAchievementsList();
     document.querySelector('.style-btn[data-style="genz"]').classList.add('bg-pink-500', 'text-white');
+    
+    // Add event listener to translate button as backup
+    document.addEventListener('DOMContentLoaded', function() {
+      const translateBtn = document.querySelector('.translate-btn');
+      if (translateBtn) {
+        translateBtn.addEventListener('click', function(e) {
+          console.log('Translate button clicked via event listener');
+          translate();
+        });
+      }
+      
+      // Test the translation function
+      console.log('App initialized. Testing translation function...');
+      console.log('Current style:', currentStyle);
+      console.log('Slang database length:', slangDatabase.length);
+    });
+    
+    // Make translate function globally accessible
+    window.translate = translate;
+    window.startVoiceInput = startVoiceInput;
+    window.copyToClipboard = copyToClipboard;
+    window.speakOutput = speakOutput;
+    window.toggleTheme = toggleTheme;
+    window.submitSlang = submitSlang;
+    window.lookupSlang = lookupSlang;
+    window.tryExample = tryExample;
+    
+    // Test function to verify translation works
+    function testTranslation() {
+      console.log('Running translation test...');
+      const testInput = 'lol that was sus no cap';
+      const testStyle = 'genz';
+      
+      let result = testInput;
+      const slangForStyle = slangDatabase.filter(s => s.style === testStyle);
+      
+      // Test slang meaning replacement
+      slangForStyle.forEach(({ term, meaning }) => {
+        const regex = new RegExp(`\\b${term}\\b`, 'gi');
+        if (result.match(regex)) {
+          result = result.replace(regex, `[${meaning}]`);
+        }
+      });
+      
+      result = result.replace(/going to/gi, 'finna').replace(/yes/gi, 'fr').replace(/no/gi, 'nah fam');
+      result = `💬 ${result} ${Math.random() > 0.5 ? 'vibes' : 'slaps'}`;
+      
+      console.log('Test input:', testInput);
+      console.log('Test result:', result);
+      console.log('Translation test completed successfully!');
+      console.log('Slang meanings will now be shown in brackets!');
+    }
+    
+    // Run test after page loads
+    setTimeout(testTranslation, 1000);
   </script>
 </body>
 </html>
